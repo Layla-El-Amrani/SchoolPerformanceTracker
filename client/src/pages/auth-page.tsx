@@ -5,41 +5,32 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-});
-
-const registerSchema = z.object({
-  username: z.string().min(3, { message: "Username must be at least 3 characters" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  confirmPassword: z.string(),
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
-const resetPasswordSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
-type RegisterFormValues = z.infer<typeof registerSchema>;
-type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export default function AuthPage() {
   const [location, navigate] = useLocation();
-  const { user, loginMutation, registerMutation, resetPasswordMutation } = useAuth();
+  const { t } = useTranslation();
+  const { user, loginMutation, resetPasswordMutation } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  
+  // Define schemas with translations for error messages
+  const loginSchema = z.object({
+    email: z.string().email({ message: t('auth.errors.invalidEmail') }),
+    password: z.string().min(6, { message: t('auth.errors.shortPassword') }),
+  });
+  
+  const resetPasswordSchema = z.object({
+    email: z.string().email({ message: t('auth.errors.invalidEmail') }),
+  });
+  
+  type LoginFormValues = z.infer<typeof loginSchema>;
+  type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
   
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -47,17 +38,6 @@ export default function AuthPage() {
     defaultValues: {
       email: "",
       password: "",
-    },
-  });
-  
-  // Register form
-  const registerForm = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
     },
   });
   
@@ -81,12 +61,6 @@ export default function AuthPage() {
     loginMutation.mutate(data);
   }
   
-  // Handle register form submission
-  function onRegisterSubmit(data: RegisterFormValues) {
-    const { confirmPassword, ...registerData } = data;
-    registerMutation.mutate(registerData);
-  }
-  
   // Handle reset password form submission
   function onResetPasswordSubmit(data: ResetPasswordFormValues) {
     resetPasswordMutation.mutate(data);
@@ -99,9 +73,9 @@ export default function AuthPage() {
       <div className="w-full max-w-6xl grid md:grid-cols-2 gap-6">
         {/* Hero section */}
         <div className="hidden md:flex flex-col justify-center p-6 bg-primary text-white rounded-lg">
-          <h1 className="text-3xl font-bold mb-4">Academic Performance Analysis</h1>
+          <h1 className="text-3xl font-bold mb-4">{t('app.title')}</h1>
           <p className="text-lg mb-6">
-            A comprehensive system for provincial school directors to analyze and visualize student results across different institutions.
+            {t('auth.heroDescription')}
           </p>
           <div className="space-y-4">
             <div className="flex items-start">
@@ -112,8 +86,8 @@ export default function AuthPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-medium">Comprehensive Dashboards</h3>
-                <p className="text-sm text-white/80">Visualize overall averages, success rates, rankings, and subject metrics</p>
+                <h3 className="font-medium">{t('auth.feature1.title')}</h3>
+                <p className="text-sm text-white/80">{t('auth.feature1.description')}</p>
               </div>
             </div>
             
@@ -124,8 +98,8 @@ export default function AuthPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-medium">Easy Data Import</h3>
-                <p className="text-sm text-white/80">Import Excel and XML files with academic performance data</p>
+                <h3 className="font-medium">{t('auth.feature2.title')}</h3>
+                <p className="text-sm text-white/80">{t('auth.feature2.description')}</p>
               </div>
             </div>
             
@@ -136,8 +110,8 @@ export default function AuthPage() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-medium">School Comparison</h3>
-                <p className="text-sm text-white/80">Compare performance between schools and track improvements</p>
+                <h3 className="font-medium">{t('auth.feature3.title')}</h3>
+                <p className="text-sm text-white/80">{t('auth.feature3.description')}</p>
               </div>
             </div>
           </div>
@@ -147,161 +121,70 @@ export default function AuthPage() {
         <Card className="w-full">
           <CardContent className="pt-6">
             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-primary">Academic Performance Analysis</h1>
-              <p className="text-muted-foreground">Provincial Schools Dashboard</p>
+              <h1 className="text-2xl font-bold text-primary">{t('app.title')}</h1>
+              <p className="text-muted-foreground">{t('app.subtitle')}</p>
             </div>
             
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid grid-cols-2 mb-6">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
-              </TabsList>
+            {/* Login Form */}
+            <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">{t('auth.email')}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="school.director@example.edu"
+                  {...loginForm.register("email")}
+                />
+                {loginForm.formState.errors.email && (
+                  <p className="text-sm text-destructive">
+                    {loginForm.formState.errors.email.message}
+                  </p>
+                )}
+              </div>
               
-              {/* Login Form */}
-              <TabsContent value="login">
-                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="school.director@example.edu"
-                      {...loginForm.register("email")}
-                    />
-                    {loginForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
-                        {loginForm.formState.errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                      <Button
-                        type="button"
-                        variant="link"
-                        className="text-xs text-primary p-0 h-auto"
-                        onClick={() => setShowResetModal(true)}
-                      >
-                        Forgot password?
-                      </Button>
-                    </div>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        {...loginForm.register("password")}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    {loginForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
-                        {loginForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-primary"
-                    disabled={loginMutation.isPending}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">{t('auth.password')}</Label>
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="text-xs text-primary p-0 h-auto"
+                    onClick={() => setShowResetModal(true)}
                   >
-                    {loginMutation.isPending ? 'Signing in...' : 'Sign In'}
+                    {t('auth.forgotPassword')}
                   </Button>
-                </form>
-              </TabsContent>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    {...loginForm.register("password")}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+                {loginForm.formState.errors.password && (
+                  <p className="text-sm text-destructive">
+                    {loginForm.formState.errors.password.message}
+                  </p>
+                )}
+              </div>
               
-              {/* Register Form */}
-              <TabsContent value="register">
-                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
-                    <Input
-                      id="username"
-                      type="text"
-                      placeholder="johndirector"
-                      {...registerForm.register("username")}
-                    />
-                    {registerForm.formState.errors.username && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.username.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="register-email">Email Address</Label>
-                    <Input
-                      id="register-email"
-                      type="email"
-                      placeholder="school.director@example.edu"
-                      {...registerForm.register("email")}
-                    />
-                    {registerForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="register-password">Password</Label>
-                    <div className="relative">
-                      <Input
-                        id="register-password"
-                        type={showPassword ? "text" : "password"}
-                        {...registerForm.register("password")}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    {registerForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <Input
-                      id="confirm-password"
-                      type={showPassword ? "text" : "password"}
-                      {...registerForm.register("confirmPassword")}
-                    />
-                    {registerForm.formState.errors.confirmPassword && (
-                      <p className="text-sm text-destructive">
-                        {registerForm.formState.errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-primary"
-                    disabled={registerMutation.isPending}
-                  >
-                    {registerMutation.isPending ? 'Creating Account...' : 'Create Account'}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
+              <Button 
+                type="submit" 
+                className="w-full bg-primary"
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? t('common.loading') : t('auth.signIn')}
+              </Button>
+            </form>
           </CardContent>
         </Card>
       </div>
@@ -310,15 +193,15 @@ export default function AuthPage() {
       <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Reset Your Password</DialogTitle>
+            <DialogTitle>{t('auth.resetPassword')}</DialogTitle>
             <DialogDescription>
-              Enter your email address and we'll send you a link to reset your password via Gmail.
+              {t('auth.resetPasswordDescription')}
             </DialogDescription>
           </DialogHeader>
           
           <form onSubmit={resetPasswordForm.handleSubmit(onResetPasswordSubmit)} className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="reset-email">Email Address</Label>
+              <Label htmlFor="reset-email">{t('auth.email')}</Label>
               <Input
                 id="reset-email"
                 type="email"
@@ -337,7 +220,7 @@ export default function AuthPage() {
               className="w-full"
               disabled={resetPasswordMutation.isPending}
             >
-              {resetPasswordMutation.isPending ? 'Sending...' : 'Send Reset Link'}
+              {resetPasswordMutation.isPending ? t('common.loading') : t('auth.sendResetLink')}
             </Button>
           </form>
         </DialogContent>

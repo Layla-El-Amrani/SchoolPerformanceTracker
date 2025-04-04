@@ -14,6 +14,12 @@
   "dashboard": {
     "title": "Academic Performance Dashboard",
     "subtitle": "Provincial overview of student performance metrics",
+    "filters": {
+      "selectYear": "Select Academic Year",
+      "selectTerm": "Select Term",
+      "allTerms": "All Terms",
+      "current": "Current"
+    },
     "keyMetrics": {
       "title": "Key Performance Metrics",
       "overallAverage": "Overall Average",
@@ -55,7 +61,24 @@
     "resetPasswordDescription": "Enter your email address and we'll send you a link to reset your password via Gmail.",
     "sendResetLink": "Send Reset Link",
     "createAccount": "Create Account",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "heroDescription": "A comprehensive system for provincial school directors to analyze and visualize student results across different institutions.",
+    "feature1": {
+      "title": "Comprehensive Dashboards",
+      "description": "Visualize overall averages, success rates, rankings, and subject metrics"
+    },
+    "feature2": {
+      "title": "Easy Data Import",
+      "description": "Import Excel and XML files with academic performance data"
+    },
+    "feature3": {
+      "title": "School Comparison",
+      "description": "Compare performance between schools and track improvements"
+    },
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "shortPassword": "Password must be at least 6 characters"
+    }
   },
   "import": {
     "title": "Import Student Data",

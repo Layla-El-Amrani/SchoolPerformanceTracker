@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Bell, HelpCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Bell, HelpCircle, Sun, Moon, LanguagesIcon } from "lucide-react";
 import { 
   Select, 
   SelectContent, 
@@ -10,6 +11,12 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { AcademicYear, Term } from "@/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   onYearChange: (yearId: number) => void;
@@ -24,6 +31,8 @@ export function Header({
   selectedYearId, 
   selectedTermId 
 }: HeaderProps) {
+  const { t, i18n } = useTranslation();
+  
   // Fetch academic years
   const { data: academicYears, isLoading: yearsLoading } = useQuery<AcademicYear[]>({
     queryKey: ["/api/academic-years"],
@@ -67,12 +76,12 @@ export function Header({
               onValueChange={handleYearChange}
             >
               <SelectTrigger className="min-w-[200px]">
-                <SelectValue placeholder={yearsLoading ? "Loading years..." : "Select Academic Year"} />
+                <SelectValue placeholder={yearsLoading ? t('common.loading') : t('dashboard.filters.selectYear')} />
               </SelectTrigger>
               <SelectContent>
                 {academicYears?.map((year) => (
                   <SelectItem key={year.id} value={year.id.toString()}>
-                    {year.name}{year.active ? " (Current)" : ""}
+                    {year.name}{year.active ? ` (${t('dashboard.filters.current')})` : ""}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -87,10 +96,10 @@ export function Header({
               onValueChange={handleTermChange}
             >
               <SelectTrigger className="min-w-[150px]">
-                <SelectValue placeholder={termsLoading ? "Loading terms..." : "Select Term"} />
+                <SelectValue placeholder={termsLoading ? t('common.loading') : t('dashboard.filters.selectTerm')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Terms</SelectItem>
+                <SelectItem value="all">{t('dashboard.filters.allTerms')}</SelectItem>
                 {terms?.map((term) => (
                   <SelectItem key={term.id} value={term.id.toString()}>
                     {term.name}
@@ -102,6 +111,62 @@ export function Header({
         </div>
         
         <div className="flex items-center space-x-2">
+          {/* Theme Toggle */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => {
+                const settingsEvent = new CustomEvent('theme-change', { detail: 'light' });
+                window.dispatchEvent(settingsEvent);
+              }}>
+                <Sun className="mr-2 h-4 w-4" />
+                <span>{t('settings.appearance.light')}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const settingsEvent = new CustomEvent('theme-change', { detail: 'dark' });
+                window.dispatchEvent(settingsEvent);
+              }}>
+                <Moon className="mr-2 h-4 w-4" />
+                <span>{t('settings.appearance.dark')}</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {/* Language Selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <LanguagesIcon className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => {
+                const settingsEvent = new CustomEvent('language-change', { detail: 'en' });
+                window.dispatchEvent(settingsEvent);
+              }}>
+                {t('settings.language.english')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const settingsEvent = new CustomEvent('language-change', { detail: 'fr' });
+                window.dispatchEvent(settingsEvent);
+              }}>
+                {t('settings.language.french')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const settingsEvent = new CustomEvent('language-change', { detail: 'ar' });
+                window.dispatchEvent(settingsEvent);
+              }}>
+                {t('settings.language.arabic')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
           <Button variant="ghost" size="icon">
             <HelpCircle className="h-5 w-5 text-muted-foreground" />
           </Button>

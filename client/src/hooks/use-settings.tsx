@@ -47,10 +47,19 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
     applyTheme();
     
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', applyTheme);
+    
+    // Listen for theme change events from the header component
+    const handleThemeChange = (e: CustomEvent) => {
+      setTheme(e.detail as Theme);
+    };
+    
+    window.addEventListener('theme-change', handleThemeChange as EventListener);
     
     return () => {
-      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', applyTheme);
+      mediaQuery.removeEventListener('change', applyTheme);
+      window.removeEventListener('theme-change', handleThemeChange as EventListener);
     };
   }, [theme]);
 
@@ -60,7 +69,25 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     // Set the direction based on language
     document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
     
+    // Add or remove RTL class on body for additional styling
+    if (isRtl) {
+      document.body.classList.add('rtl');
+    } else {
+      document.body.classList.remove('rtl');
+    }
+    
     localStorage.setItem('language', language);
+    
+    // Listen for language change events from the header component
+    const handleLanguageChange = (e: CustomEvent) => {
+      setLanguage(e.detail as Language);
+    };
+    
+    window.addEventListener('language-change', handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('language-change', handleLanguageChange as EventListener);
+    };
   }, [language, i18n, isRtl]);
 
   const setTheme = (newTheme: Theme) => {

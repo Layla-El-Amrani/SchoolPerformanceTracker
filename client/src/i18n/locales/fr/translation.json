@@ -14,6 +14,12 @@
   "dashboard": {
     "title": "Tableau de Bord de Performance Académique",
     "subtitle": "Aperçu provincial des métriques de performance des élèves",
+    "filters": {
+      "selectYear": "Sélectionner l'Année Académique",
+      "selectTerm": "Sélectionner le Trimestre",
+      "allTerms": "Tous les Trimestres",
+      "current": "Actuel"
+    },
     "keyMetrics": {
       "title": "Indicateurs Clés de Performance",
       "overallAverage": "Moyenne Générale",
@@ -55,7 +61,24 @@
     "resetPasswordDescription": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe via Gmail.",
     "sendResetLink": "Envoyer le Lien de Réinitialisation",
     "createAccount": "Créer un Compte",
-    "signIn": "Se Connecter"
+    "signIn": "Se Connecter",
+    "heroDescription": "Un système complet pour les directeurs d'écoles provinciales afin d'analyser et de visualiser les résultats des élèves à travers différentes institutions.",
+    "feature1": {
+      "title": "Tableaux de Bord Complets",
+      "description": "Visualisez les moyennes générales, les taux de réussite, les classements et les métriques par matière"
+    },
+    "feature2": {
+      "title": "Importation Facile des Données",
+      "description": "Importez des fichiers Excel et XML avec des données de performance académique"
+    },
+    "feature3": {
+      "title": "Comparaison des Écoles",
+      "description": "Comparez les performances entre écoles et suivez les améliorations"
+    },
+    "errors": {
+      "invalidEmail": "Veuillez entrer une adresse email valide",
+      "shortPassword": "Le mot de passe doit contenir au moins 6 caractères"
+    }
   },
   "import": {
     "title": "Importer des Données d'Élèves",
