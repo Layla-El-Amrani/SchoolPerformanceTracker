@@ -91,12 +91,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   }, [language, i18n, isRtl]);
 
   const setTheme = (newTheme: Theme) => {
+    console.log("Setting theme to:", newTheme);
     setThemeState(newTheme);
     localStorage.setItem('theme', newTheme);
   };
 
   const setLanguage = (newLanguage: Language) => {
+    console.log("Setting language to:", newLanguage);
     setLanguageState(newLanguage);
+    localStorage.setItem('language', newLanguage);
   };
 
   return (

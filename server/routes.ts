@@ -137,16 +137,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // School Performance Summaries
   app.get("/api/school-performance", async (req, res) => {
     try {
-      const academicYearId = parseInt(req.query.academicYearId as string, 10);
-      const termId = req.query.termId ? parseInt(req.query.termId as string, 10) : undefined;
+      let academicYearId: number;
       
-      if (isNaN(academicYearId)) {
-        return res.status(400).json({ message: "Invalid academic year ID" });
+      if (req.query.academicYearId) {
+        academicYearId = parseInt(req.query.academicYearId as string, 10);
+        if (isNaN(academicYearId)) {
+          return res.status(400).json({ message: "Invalid academic year ID format" });
+        }
+      } else {
+        // Get active academic year if not provided
+        const activeYear = await storage.getActiveAcademicYear();
+        if (!activeYear) {
+          return res.json([]);  // Return empty array if no active year
+        }
+        academicYearId = activeYear.id;
       }
+      
+      const termId = req.query.termId ? parseInt(req.query.termId as string, 10) : undefined;
       
       const summaries = await storage.getSchoolPerformanceSummaries(academicYearId, termId);
       res.json(summaries);
     } catch (error) {
+      console.error("Error fetching school performance:", error);
       res.status(500).json({ message: "Failed to fetch school performance summaries" });
     }
   });
@@ -154,11 +166,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/school-performance/:schoolId", async (req, res) => {
     try {
       const schoolId = parseInt(req.params.schoolId, 10);
-      const academicYearId = parseInt(req.query.academicYearId as string, 10);
+      let academicYearId: number;
+      
+      if (req.query.academicYearId) {
+        academicYearId = parseInt(req.query.academicYearId as string, 10);
+        if (isNaN(academicYearId)) {
+          return res.status(400).json({ message: "Invalid academic year ID format" });
+        }
+      } else {
+        // Get active academic year if not provided
+        const activeYear = await storage.getActiveAcademicYear();
+        if (!activeYear) {
+          return res.status(404).json({ message: "No active academic year found" });
+        }
+        academicYearId = activeYear.id;
+      }
+      
       const termId = req.query.termId ? parseInt(req.query.termId as string, 10) : undefined;
       
-      if (isNaN(schoolId) || isNaN(academicYearId)) {
-        return res.status(400).json({ message: "Invalid school ID or academic year ID" });
+      if (isNaN(schoolId)) {
+        return res.status(400).json({ message: "Invalid school ID" });
       }
       
       const summary = await storage.getSchoolPerformanceSummaryBySchool(schoolId, academicYearId, termId);
@@ -168,6 +195,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(summary);
     } catch (error) {
+      console.error("Error fetching school performance for school:", error);
       res.status(500).json({ message: "Failed to fetch school performance summary" });
     }
   });
@@ -177,12 +205,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const schoolId = req.query.schoolId ? parseInt(req.query.schoolId as string, 10) : undefined;
       const subjectId = req.query.subjectId ? parseInt(req.query.subjectId as string, 10) : undefined;
-      const academicYearId = parseInt(req.query.academicYearId as string, 10);
-      const termId = req.query.termId ? parseInt(req.query.termId as string, 10) : undefined;
+      let academicYearId: number;
       
-      if (isNaN(academicYearId)) {
-        return res.status(400).json({ message: "Invalid academic year ID" });
+      if (req.query.academicYearId) {
+        academicYearId = parseInt(req.query.academicYearId as string, 10);
+        if (isNaN(academicYearId)) {
+          return res.status(400).json({ message: "Invalid academic year ID format" });
+        }
+      } else {
+        // Get active academic year if not provided
+        const activeYear = await storage.getActiveAcademicYear();
+        if (!activeYear) {
+          return res.json([]);  // Return empty array if no active year
+        }
+        academicYearId = activeYear.id;
       }
+      
+      const termId = req.query.termId ? parseInt(req.query.termId as string, 10) : undefined;
       
       let performances = [];
       
@@ -196,6 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(performances);
     } catch (error) {
+      console.error("Error fetching student performances:", error);
       res.status(500).json({ message: "Failed to fetch student performances" });
     }
   });

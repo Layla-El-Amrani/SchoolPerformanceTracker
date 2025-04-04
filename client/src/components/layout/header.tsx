@@ -122,6 +122,8 @@ export function Header({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
                 const settingsEvent = new CustomEvent('theme-change', { detail: 'light' });
                 window.dispatchEvent(settingsEvent);
               }}>
@@ -129,6 +131,8 @@ export function Header({
                 <span>{t('settings.appearance.light')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
                 const settingsEvent = new CustomEvent('theme-change', { detail: 'dark' });
                 window.dispatchEvent(settingsEvent);
               }}>
@@ -147,18 +151,30 @@ export function Header({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => {
+                i18n.changeLanguage('en');
+                document.documentElement.dir = 'ltr';
+                document.body.classList.remove('rtl');
+                localStorage.setItem('language', 'en');
                 const settingsEvent = new CustomEvent('language-change', { detail: 'en' });
                 window.dispatchEvent(settingsEvent);
               }}>
                 {t('settings.language.english')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
+                i18n.changeLanguage('fr');
+                document.documentElement.dir = 'ltr';
+                document.body.classList.remove('rtl');
+                localStorage.setItem('language', 'fr');
                 const settingsEvent = new CustomEvent('language-change', { detail: 'fr' });
                 window.dispatchEvent(settingsEvent);
               }}>
                 {t('settings.language.french')}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {
+                i18n.changeLanguage('ar');
+                document.documentElement.dir = 'rtl';
+                document.body.classList.add('rtl');
+                localStorage.setItem('language', 'ar');
                 const settingsEvent = new CustomEvent('language-change', { detail: 'ar' });
                 window.dispatchEvent(settingsEvent);
               }}>
