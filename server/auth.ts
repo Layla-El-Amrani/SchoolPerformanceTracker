@@ -24,10 +24,19 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
+  try {
+    const [hashed, salt] = stored.split(".");
+    if (!hashed || !salt) {
+      console.error("Invalid stored password format");
+      return false;
+    }
+    const hashedBuf = Buffer.from(hashed, "hex");
+    const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+    return timingSafeEqual(hashedBuf, suppliedBuf);
+  } catch (error) {
+    console.error("Error comparing passwords:", error);
+    return false;
+  }
 }
 
 export function setupAuth(app: Express) {
@@ -52,11 +61,26 @@ export function setupAuth(app: Express) {
     new LocalStrategy(
       { usernameField: 'email' }, 
       async (email, password, done) => {
-        const user = await storage.getUserByEmail(email);
-        if (!user || !(await comparePasswords(password, user.password))) {
-          return done(null, false);
-        } else {
+        try {
+          console.log(`Login attempt for email: ${email}`);
+          const user = await storage.getUserByEmail(email);
+          
+          if (!user) {
+            console.log(`User not found: ${email}`);
+            return done(null, false);
+          }
+          
+          const isPasswordValid = await comparePasswords(password, user.password);
+          console.log(`Password validation for ${email}: ${isPasswordValid}`);
+          
+          if (!isPasswordValid) {
+            return done(null, false);
+          }
+          
           return done(null, user);
+        } catch (error) {
+          console.error("Authentication error:", error);
+          return done(error);
         }
       }
     )
@@ -167,8 +191,8 @@ export function setupAuth(app: Express) {
       const { token, password } = req.body;
       
       // Find user with this reset token
-      const user = Array.from(storage.getUsers?.() || [])
-        .find(u => u.resetToken === token && u.resetTokenExpiry && u.resetTokenExpiry > new Date());
+      const users = storage.getUsers();
+      const user = users.find(u => u.resetToken === token && u.resetTokenExpiry && u.resetTokenExpiry > new Date());
       
       if (!user) {
         return res.status(400).json({ message: "Invalid or expired token" });

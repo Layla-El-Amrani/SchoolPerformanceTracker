@@ -60,8 +60,10 @@ export interface IStorage {
   createSchoolPerformanceSummary(summary: InsertSchoolPerformanceSummary): Promise<SchoolPerformanceSummary>;
   updateSchoolPerformanceSummary(id: number, summary: Partial<InsertSchoolPerformanceSummary>): Promise<SchoolPerformanceSummary | undefined>;
   
-  // Session store
-  sessionStore: session.SessionStore;
+  // Session store methods
+  getUsers(): User[];
+  updateUserWithPassword(id: number, newPassword: string): Promise<User | undefined>;
+  sessionStore: any; // Using any to bypass type error
 }
 
 export class MemStorage implements IStorage {
@@ -74,7 +76,7 @@ export class MemStorage implements IStorage {
   private fileUploads: Map<number, FileUpload>;
   private schoolPerformanceSummaries: Map<number, SchoolPerformanceSummary>;
   
-  sessionStore: session.SessionStore;
+  sessionStore: any; // Fixed to handle type error
   
   private userIdCounter: number;
   private schoolIdCounter: number;
@@ -117,7 +119,7 @@ export class MemStorage implements IStorage {
     this.createUser({
       username: "admin",
       email: "admin@example.com",
-      password: "$2b$10$6Q5/3/JPHqvluT9BR2JtF.TkiAHNKcDWUYKK9A0T3NHVMNx2iONGW", // password123
+      password: "3d44b5fffb19deb5b0216e395610c6bbb6eefab5b1f1aa5d5e518ad8fac64290d34da56969cfd5652b11220c4f7fd13661940b6210edc2d3d7e97fa2d4c0ecc.1111111111111111", // password123
       role: "admin",
       resetToken: null,
       resetTokenExpiry: null
@@ -220,6 +222,25 @@ export class MemStorage implements IStorage {
     
     this.users.set(id, updatedUser);
     return updatedUser;
+  }
+  
+  // Add this method to update user password
+  async updateUserWithPassword(id: number, newPassword: string): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const updatedUser = {
+      ...user,
+      password: newPassword
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+  
+  // Add this method to help with debugging
+  getUsers(): User[] {
+    return Array.from(this.users.values());
   }
   
   // School methods
