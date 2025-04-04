@@ -5,18 +5,26 @@ import DashboardPage from "@/pages/dashboard-page";
 import SchoolsPage from "@/pages/schools-page";
 import SubjectsPage from "@/pages/subjects-page";
 import ImportPage from "@/pages/import-page";
+import ExportPage from "@/pages/export-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { AuthProvider } from "@/hooks/use-auth";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 
 // Create Settings page component
 function SettingsPage() {
   const { t, i18n } = useTranslation();
+  const { changePasswordMutation, user } = useAuth();
   
   // Initial theme and language values
   const [theme, setThemeState] = useState(() => localStorage.getItem('theme') || 'system');
   const [language, setLanguageState] = useState(() => localStorage.getItem('language') || 'en');
+  
+  // Password form state
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   
   // Set theme function
   const setTheme = (newTheme: string) => {
@@ -60,6 +68,37 @@ function SettingsPage() {
     }
   };
   
+  // Handle password change
+  const handlePasswordChange = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate inputs
+    if (newPassword !== confirmPassword) {
+      setPasswordError(t('settings.password.passwordsDoNotMatch'));
+      return;
+    }
+    
+    if (newPassword.length < 8) {
+      setPasswordError(t('settings.password.passwordTooShort'));
+      return;
+    }
+    
+    // Clear error
+    setPasswordError(null);
+    
+    // Submit change
+    changePasswordMutation.mutate({
+      currentPassword,
+      newPassword
+    }, {
+      onSuccess: () => {
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+      }
+    });
+  };
+  
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-2">{t('settings.title')}</h1>
@@ -100,6 +139,54 @@ function SettingsPage() {
             </div>
           </div>
         </div>
+        
+        <div className="bg-card border rounded-lg p-6 shadow-sm">
+          <h2 className="text-xl font-semibold mb-4">{t('settings.password.title')}</h2>
+          <form onSubmit={handlePasswordChange} className="grid gap-4">
+            {passwordError && (
+              <div className="rounded bg-destructive/15 p-3 text-destructive text-sm">
+                {passwordError}
+              </div>
+            )}
+            <div>
+              <label className="block text-sm font-medium mb-2">{t('settings.password.current')}</label>
+              <input 
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full p-2 border rounded-md bg-background"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">{t('settings.password.new')}</label>
+              <input 
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full p-2 border rounded-md bg-background"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">{t('settings.password.confirm')}</label>
+              <input 
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 border rounded-md bg-background"
+                required
+              />
+            </div>
+            <button 
+              type="submit"
+              className="bg-primary text-white px-4 py-2 rounded mt-2 hover:bg-primary/90 transition-colors"
+              disabled={changePasswordMutation.isPending}
+            >
+              {changePasswordMutation.isPending ? t('common.loading') : t('settings.password.changeButton')}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -112,6 +199,7 @@ function Router() {
       <ProtectedRoute path="/schools" component={SchoolsPage} />
       <ProtectedRoute path="/subjects" component={SubjectsPage} />
       <ProtectedRoute path="/import" component={ImportPage} />
+      <ProtectedRoute path="/export" component={ExportPage} />
       <ProtectedRoute path="/settings" component={SettingsPage} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />

@@ -15,6 +15,7 @@ type AuthContextType = {
   logoutMutation: ReturnType<typeof useLogoutMutation>;
   registerMutation: ReturnType<typeof useRegisterMutation>;
   resetPasswordMutation: ReturnType<typeof useResetPasswordMutation>;
+  changePasswordMutation: ReturnType<typeof useChangePasswordMutation>;
 };
 
 type LoginData = {
@@ -30,6 +31,11 @@ type RegisterData = {
 
 type ResetPasswordData = {
   email: string;
+};
+
+type ChangePasswordData = {
+  currentPassword: string;
+  newPassword: string;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -128,6 +134,29 @@ function useResetPasswordMutation() {
   });
 }
 
+function useChangePasswordMutation() {
+  const { toast } = useToast();
+  return useMutation({
+    mutationFn: async (data: ChangePasswordData) => {
+      const res = await apiRequest("POST", "/api/change-password", data);
+      return await res.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Password changed successfully",
+        description: "Your password has been updated.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Password change failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const {
     data: user,
@@ -142,6 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useRegisterMutation();
   const logoutMutation = useLogoutMutation();
   const resetPasswordMutation = useResetPasswordMutation();
+  const changePasswordMutation = useChangePasswordMutation();
 
   return (
     <AuthContext.Provider
@@ -153,6 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logoutMutation,
         registerMutation,
         resetPasswordMutation,
+        changePasswordMutation,
       }}
     >
       {children}

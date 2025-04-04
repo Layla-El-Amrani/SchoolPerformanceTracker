@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Bell, HelpCircle, Sun, Moon, LanguagesIcon } from "lucide-react";
+import { Bell, HelpCircle, Sun, Moon, LanguagesIcon, Laptop, Maximize } from "lucide-react";
 import { 
   Select, 
   SelectContent, 
@@ -139,6 +139,21 @@ export function Header({
                 <Moon className="mr-2 h-4 w-4" />
                 <span>{t('settings.appearance.dark')}</span>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                // Use system preference
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (isDark) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+                localStorage.setItem('theme', 'system');
+                const settingsEvent = new CustomEvent('theme-change', { detail: 'system' });
+                window.dispatchEvent(settingsEvent);
+              }}>
+                <Laptop className="mr-2 h-4 w-4" />
+                <span>{t('settings.appearance.system')}</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           
@@ -183,6 +198,20 @@ export function Header({
             </DropdownMenuContent>
           </DropdownMenu>
           
+          <Button variant="ghost" size="icon" onClick={() => {
+            if (document.documentElement.requestFullscreen) {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen()
+                  .catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                  });
+              } else {
+                document.exitFullscreen();
+              }
+            }
+          }}>
+            <Maximize className="h-5 w-5 text-muted-foreground" />
+          </Button>
           <Button variant="ghost" size="icon">
             <HelpCircle className="h-5 w-5 text-muted-foreground" />
           </Button>
