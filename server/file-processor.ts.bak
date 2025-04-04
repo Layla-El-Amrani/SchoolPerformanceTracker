@@ -42,8 +42,6 @@ export async function processExcelFile(
     const headerRow = worksheet.getRow(1);
     const headers = headerRow.values as (string | undefined)[];
     
-    console.log("Excel headers found:", headers);
-    
     // Create a mapping between expected headers and possible custom headers
     const headerMappings = {
       "School": ["School", "matiere", "matiereAr"],
@@ -53,7 +51,7 @@ export async function processExcelFile(
     };
     
     // Helper function to find a header column index based on multiple possible header names
-    const findHeaderIndex = (possibleNames: string[]): number => {
+    const findHeaderIndex = (possibleNames: string[]) => {
       for (const name of possibleNames) {
         const index = headers.findIndex(h => 
           h?.toString().toLowerCase() === name.toLowerCase()
@@ -91,6 +89,9 @@ export async function processExcelFile(
       h?.toString().toLowerCase() === "attendance rate"
     );
     
+    // Process data rows
+    let rowIndex = 2; // Start from second row (after headers)
+    
     // Create a helper function to find or create a school by name
     const findOrCreateSchool = async (name: string): Promise<any> => {
       let school = schools.find(s => s.name.toLowerCase() === name.toLowerCase());
@@ -99,8 +100,9 @@ export async function processExcelFile(
           // Auto-create school if it doesn't exist
           school = await storage.createSchool({
             name: name,
-            location: "",
-            type: "Public"
+            address: "",
+            contactEmail: "",
+            contactPhone: ""
           });
           
           // Add the newly created school to our local array
@@ -119,7 +121,7 @@ export async function processExcelFile(
       if (!subject) {
         try {
           // Auto-create subject if it doesn't exist
-          const code = name.substring(0, 4).toUpperCase().replace(/[^A-Z0-9]/g, '');
+          const code = name.substring(0, 4).toUpperCase().replace(/[^A-Z0-9]/g, "");
           subject = await storage.createSubject({
             name: name,
             code: code || "SUBJ"
@@ -139,8 +141,6 @@ export async function processExcelFile(
     for (let i = 2; i <= worksheet.rowCount; i++) {
       const row = worksheet.getRow(i);
       const rowNumber = i;
-      
-      if (!row.values || row.values.length === 0) continue;
       
       const values = row.values as (string | number | undefined)[];
       
@@ -164,30 +164,27 @@ export async function processExcelFile(
         const school = await findOrCreateSchool(schoolName);
         const subject = await findOrCreateSubject(subjectName);
       
-        // Parse scores and rates
-        const averageScore = parsePercentage(averageScoreStr);
-        const passRate = parsePercentage(passRateStr);
-        const attendanceRate = attendanceRateStr ? parsePercentage(attendanceRateStr) : undefined;
-        
-        if (averageScore === null || passRate === null) {
-          errors.push(`Row ${rowNumber}: Invalid score or rate values`);
-          continue;
-        }
-        
-        // Add to performance data
-        performanceData.push({
-          schoolId: school.id,
-          academicYearId,
-          termId: termId || null,
-          subjectId: subject.id,
-          averageScore,
-          passRate,
-          attendanceRate: attendanceRate !== null ? attendanceRate : undefined
-        });
-      } catch (error) {
-        errors.push(`Row ${rowNumber}: ${error instanceof Error ? error.message : String(error)}`);
+      // Parse scores and rates
+      const averageScore = parsePercentage(averageScoreStr);
+      const passRate = parsePercentage(passRateStr);
+      const attendanceRate = attendanceRateStr ? parsePercentage(attendanceRateStr) : undefined;
+      
+      if (averageScore === null || passRate === null) {
+        errors.push(`Row ${rowNumber}: Invalid score or rate values`);
+        return;
       }
-    }
+      
+      // Add to performance data
+      performanceData.push({
+        schoolId: school.id,
+        academicYearId,
+        termId: termId || null,
+        subjectId: subject.id,
+        averageScore,
+        passRate,
+        attendanceRate: attendanceRate !== null ? attendanceRate : undefined
+      });
+    });
     
     if (errors.length > 0) {
       return { 
@@ -223,87 +220,18 @@ export async function processXmlFile(
     const performanceData: PerformanceData[] = [];
     const errors: string[] = [];
     
-    // Create a helper function to find or create a school by name
-    const findOrCreateSchool = async (name: string): Promise<any> => {
-      let school = schools.find(s => s.name.toLowerCase() === name.toLowerCase());
-      if (!school) {
-        try {
-          // Auto-create school if it doesn't exist
-          school = await storage.createSchool({
-            name: name,
-            location: "",
-            type: "Public"
-          });
-          
-          // Add the newly created school to our local array
-          schools.push(school);
-          console.log(`Created new school: ${name}`);
-        } catch (error) {
-          throw new Error(`Failed to create school "${name}": ${error}`);
-        }
-      }
-      return school;
-    };
-    
-    // Create a helper function to find or create a subject by name
-    const findOrCreateSubject = async (name: string): Promise<any> => {
-      let subject = subjects.find(s => s.name.toLowerCase() === name.toLowerCase());
-      if (!subject) {
-        try {
-          // Auto-create subject if it doesn't exist
-          const code = name.substring(0, 4).toUpperCase().replace(/[^A-Z0-9]/g, '');
-          subject = await storage.createSubject({
-            name: name,
-            code: code || "SUBJ"
-          });
-          
-          // Add the newly created subject to our local array
-          subjects.push(subject);
-          console.log(`Created new subject: ${name}`);
-        } catch (error) {
-          throw new Error(`Failed to create subject "${name}": ${error}`);
-        }
-      }
-      return subject;
-    };
-    
     // Extract performance data from XML structure
-    // Handle different possible root element names
-    let performanceRecords = [];
-    if (result.performances?.performance) {
-      performanceRecords = result.performances.performance;
-    } else if (result.data?.record) {
-      performanceRecords = result.data.record;
-    } else {
-      // Try to find any element that might contain the data
-      for (const key in result) {
-        if (result[key] && typeof result[key] === 'object') {
-          for (const subKey in result[key]) {
-            if (Array.isArray(result[key][subKey])) {
-              performanceRecords = result[key][subKey];
-              break;
-            }
-          }
-        }
-        if (performanceRecords.length > 0) break;
-      }
-    }
+    // This is a generic implementation - adjust based on actual XML structure
+    const performanceRecords = result.performances?.performance || [];
     
-    if (!Array.isArray(performanceRecords)) {
-      if (performanceRecords._text !== undefined) {
-        // Handle case where there's only one record
-        const record = performanceRecords;
-        await processXmlRecord(record, findOrCreateSchool, findOrCreateSubject, performanceData, errors, academicYearId, termId);
-      } else {
-        // Convert to array if it's an object but not an array
-        performanceRecords = [performanceRecords];
-      }
-    }
-    
-    if (Array.isArray(performanceRecords)) {
+    if (!Array.isArray(performanceRecords) && performanceRecords._text !== undefined) {
+      // Handle case where there's only one record
+      const record = performanceRecords;
+      processXmlRecord(record, schools, subjects, performanceData, errors, academicYearId, termId);
+    } else if (Array.isArray(performanceRecords)) {
       // Handle multiple records
       for (const record of performanceRecords) {
-        await processXmlRecord(record, findOrCreateSchool, findOrCreateSubject, performanceData, errors, academicYearId, termId);
+        processXmlRecord(record, schools, subjects, performanceData, errors, academicYearId, termId);
       }
     } else {
       return { 
@@ -330,59 +258,20 @@ export async function processXmlFile(
 }
 
 // Helper function to process an XML record
-async function processXmlRecord(
+function processXmlRecord(
   record: any, 
-  findOrCreateSchool: (name: string) => Promise<any>,
-  findOrCreateSubject: (name: string) => Promise<any>,
+  schools: any[], 
+  subjects: any[], 
   performanceData: PerformanceData[], 
   errors: string[], 
   academicYearId: number, 
   termId?: number
 ) {
   try {
-    // Try multiple possible field names for school and subject
-    const schoolFields = ['school', 'schoolName', 'matiere', 'matiereAr'];
-    const subjectFields = ['subject', 'subjectName', 'matiere', 'matiereAr', 'BAPG'];
-    const scoreFields = ['averageScore', 'score', 'moyenneSession', 'moyenneExam', 'prExamen', 'moyenneCC', 'moyenneNoteCC'];
-    const rateFields = ['passRate', 'rate', 'Note', 'Notes', 'moyenneNoteCC'];
-    
-    // Extract school name
-    let schoolName;
-    for (const field of schoolFields) {
-      if (record[field]?._text) {
-        schoolName = record[field]._text;
-        break;
-      }
-    }
-    
-    // Extract subject name
-    let subjectName;
-    for (const field of subjectFields) {
-      if (record[field]?._text) {
-        subjectName = record[field]._text;
-        break;
-      }
-    }
-    
-    // Extract average score
-    let averageScoreStr;
-    for (const field of scoreFields) {
-      if (record[field]?._text) {
-        averageScoreStr = record[field]._text;
-        break;
-      }
-    }
-    
-    // Extract pass rate
-    let passRateStr;
-    for (const field of rateFields) {
-      if (record[field]?._text) {
-        passRateStr = record[field]._text;
-        break;
-      }
-    }
-    
-    // Extract attendance rate (optional)
+    const schoolName = record.school?._text;
+    const subjectName = record.subject?._text;
+    const averageScoreStr = record.averageScore?._text;
+    const passRateStr = record.passRate?._text;
     const attendanceRateStr = record.attendanceRate?._text;
     
     if (!schoolName || !subjectName || !averageScoreStr || !passRateStr) {
@@ -390,9 +279,19 @@ async function processXmlRecord(
       return;
     }
     
-    // Find or create school and subject
-    const school = await findOrCreateSchool(schoolName);
-    const subject = await findOrCreateSubject(subjectName);
+    // Find school by name
+    const school = schools.find((s: any) => s.name.toLowerCase() === schoolName.toLowerCase());
+    if (!school) {
+      errors.push(`School "${schoolName}" not found`);
+      return;
+    }
+    
+    // Find subject by name
+    const subject = subjects.find((s: any) => s.name.toLowerCase() === subjectName.toLowerCase());
+    if (!subject) {
+      errors.push(`Subject "${subjectName}" not found`);
+      return;
+    }
     
     // Parse scores and rates
     const averageScore = parsePercentage(averageScoreStr);
@@ -400,7 +299,7 @@ async function processXmlRecord(
     const attendanceRate = attendanceRateStr ? parsePercentage(attendanceRateStr) : undefined;
     
     if (averageScore === null || passRate === null) {
-      errors.push(`Invalid score or rate values in XML record`);
+      errors.push(`Invalid score or rate values`);
       return;
     }
     

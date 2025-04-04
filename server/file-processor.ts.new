@@ -99,8 +99,10 @@ export async function processExcelFile(
           // Auto-create school if it doesn't exist
           school = await storage.createSchool({
             name: name,
-            location: "",
-            type: "Public"
+            code: name.substring(0, 5).toUpperCase().replace(/[^A-Z0-9]/g, '') || "SCH",
+            address: "",
+            contactEmail: "",
+            contactPhone: ""
           });
           
           // Add the newly created school to our local array
@@ -231,8 +233,10 @@ export async function processXmlFile(
           // Auto-create school if it doesn't exist
           school = await storage.createSchool({
             name: name,
-            location: "",
-            type: "Public"
+            code: name.substring(0, 5).toUpperCase().replace(/[^A-Z0-9]/g, '') || "SCH",
+            address: "",
+            contactEmail: "",
+            contactPhone: ""
           });
           
           // Add the newly created school to our local array
