@@ -1,0 +1,104 @@
+{
+  "app": {
+    "title": "تحليل الأداء الأكاديمي",
+    "subtitle": "لوحة معلومات المدارس الإقليمية"
+  },
+  "navigation": {
+    "dashboard": "لوحة المعلومات",
+    "schools": "تحليل المدارس",
+    "subjects": "أداء المواد الدراسية",
+    "import": "استيراد البيانات",
+    "export": "تصدير التقارير",
+    "settings": "الإعدادات"
+  },
+  "dashboard": {
+    "title": "لوحة معلومات الأداء الأكاديمي",
+    "subtitle": "نظرة عامة إقليمية على مقاييس أداء الطلاب",
+    "keyMetrics": {
+      "title": "مؤشرات الأداء الرئيسية",
+      "overallAverage": "المتوسط العام",
+      "passRate": "معدل النجاح",
+      "schoolsAnalyzed": "المدارس المحللة",
+      "improvementRate": "معدل التحسن"
+    },
+    "performanceTrends": {
+      "title": "اتجاهات الأداء",
+      "averageScore": "متوسط الدرجات",
+      "passRate": "معدل النجاح"
+    },
+    "schoolRankings": {
+      "title": "تصنيف المدارس",
+      "rank": "الترتيب",
+      "school": "المدرسة",
+      "score": "الدرجة",
+      "empty": "لا توجد تصنيفات مدرسية متاحة"
+    },
+    "subjectPerformance": {
+      "title": "تحليل أداء المواد الدراسية",
+      "subject": "المادة",
+      "average": "المتوسط",
+      "passRate": "معدل النجاح",
+      "yoyChange": "التغيير السنوي",
+      "performance": "الأداء",
+      "empty": "لا توجد بيانات أداء متاحة للمواد الدراسية"
+    }
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "التسجيل",
+    "email": "البريد الإلكتروني",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "resetPasswordDescription": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور عبر Gmail.",
+    "sendResetLink": "إرسال رابط إعادة التعيين",
+    "createAccount": "إنشاء حساب",
+    "signIn": "تسجيل الدخول"
+  },
+  "import": {
+    "title": "استيراد بيانات الطلاب",
+    "subtitle": "قم بتحميل ملفات Excel أو XML التي تحتوي على بيانات أداء الطلاب للتحليل",
+    "uploadTitle": "تحميل ملف البيانات",
+    "uploadDescription": "قم بتحميل ملفات Excel (.xlsx, .xls) أو XML مع بيانات أداء الطلاب للعام الدراسي والفصل المحددين.",
+    "dragDrop": "اسحب وأفلت الملفات هنا",
+    "or": "أو",
+    "browse": "استعراض الملفات",
+    "supported": "التنسيقات المدعومة: Excel (.xlsx, .xls) وملفات XML",
+    "fileSize": "حجم الملف:",
+    "recentUploads": "التحميلات الأخيرة",
+    "noUploads": "لا توجد تحميلات ملفات حديثة"
+  },
+  "settings": {
+    "title": "إعدادات التطبيق",
+    "subtitle": "تخصيص تجربتك وتفضيلاتك",
+    "appearance": {
+      "title": "المظهر",
+      "theme": "السمة",
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "النظام"
+    },
+    "language": {
+      "title": "اللغة",
+      "english": "English",
+      "french": "Français",
+      "arabic": "العربية"
+    }
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "actions": "الإجراءات",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "export": "تصدير",
+    "filter": "تصفية",
+    "search": "بحث",
+    "view": "عرض",
+    "download": "تنزيل",
+    "noData": "لا توجد بيانات متاحة"
+  }
+}

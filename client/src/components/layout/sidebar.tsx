@@ -11,6 +11,7 @@ import {
   FileDown, 
   LogOut,
   Menu,
+  Settings,
   X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,11 @@ export function Sidebar({ className }: SidebarProps) {
       icon: <FileDown className="h-5 w-5" />,
       href: "/export",
     },
+    {
+      title: "Settings",
+      icon: <Settings className="h-5 w-5" />,
+      href: "/settings",
+    },
   ];
   
   const SidebarContent = () => (
@@ -81,9 +87,9 @@ export function Sidebar({ className }: SidebarProps) {
         <nav className="space-y-1">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>
-              <a
+              <div
                 className={cn(
-                  "flex items-center px-6 py-3 text-foreground hover:bg-muted transition-colors",
+                  "flex items-center px-6 py-3 text-foreground hover:bg-muted transition-colors cursor-pointer",
                   location === item.href && "nav-item active font-semibold"
                 )}
                 onClick={() => setOpen(false)}
@@ -98,7 +104,7 @@ export function Sidebar({ className }: SidebarProps) {
                 {location === item.href && (
                   <ChevronRight className="ml-auto h-4 w-4 text-primary" />
                 )}
-              </a>
+              </div>
             </Link>
           ))}
         </nav>

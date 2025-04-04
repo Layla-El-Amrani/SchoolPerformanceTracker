@@ -1,0 +1,104 @@
+{
+  "app": {
+    "title": "Academic Performance Analysis",
+    "subtitle": "Provincial Schools Dashboard"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "schools": "School Analysis",
+    "subjects": "Subject Performance",
+    "import": "Import Data",
+    "export": "Export Reports",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Academic Performance Dashboard",
+    "subtitle": "Provincial overview of student performance metrics",
+    "keyMetrics": {
+      "title": "Key Performance Metrics",
+      "overallAverage": "Overall Average",
+      "passRate": "Pass Rate",
+      "schoolsAnalyzed": "Schools Analyzed",
+      "improvementRate": "Improvement"
+    },
+    "performanceTrends": {
+      "title": "Performance Trends",
+      "averageScore": "Average Score",
+      "passRate": "Pass Rate"
+    },
+    "schoolRankings": {
+      "title": "School Rankings",
+      "rank": "Rank",
+      "school": "School",
+      "score": "Score",
+      "empty": "No school rankings available"
+    },
+    "subjectPerformance": {
+      "title": "Subject Performance Analysis",
+      "subject": "Subject",
+      "average": "Average",
+      "passRate": "Pass Rate",
+      "yoyChange": "YoY Change",
+      "performance": "Performance",
+      "empty": "No subject performance data available"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email Address",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset Your Password",
+    "resetPasswordDescription": "Enter your email address and we'll send you a link to reset your password via Gmail.",
+    "sendResetLink": "Send Reset Link",
+    "createAccount": "Create Account",
+    "signIn": "Sign In"
+  },
+  "import": {
+    "title": "Import Student Data",
+    "subtitle": "Upload Excel or XML files containing student performance data for analysis",
+    "uploadTitle": "Upload Data File",
+    "uploadDescription": "Upload Excel files (.xlsx, .xls) or XML files with student performance data for the selected academic year and term.",
+    "dragDrop": "Drag & Drop Files Here",
+    "or": "or",
+    "browse": "Browse Files",
+    "supported": "Supported formats: Excel (.xlsx, .xls) and XML files",
+    "fileSize": "File size:",
+    "recentUploads": "Recent Uploads",
+    "noUploads": "No recent file uploads"
+  },
+  "settings": {
+    "title": "Application Settings",
+    "subtitle": "Customize your experience and preferences",
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "title": "Language",
+      "english": "English",
+      "french": "Français",
+      "arabic": "العربية"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "export": "Export",
+    "filter": "Filter",
+    "search": "Search",
+    "view": "View",
+    "download": "Download",
+    "noData": "No data available"
+  }
+}

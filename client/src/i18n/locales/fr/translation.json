@@ -1,0 +1,104 @@
+{
+  "app": {
+    "title": "Analyse de Performance Académique",
+    "subtitle": "Tableau de Bord des Écoles Provinciales"
+  },
+  "navigation": {
+    "dashboard": "Tableau de Bord",
+    "schools": "Analyse des Écoles",
+    "subjects": "Performance par Matière",
+    "import": "Importer des Données",
+    "export": "Exporter des Rapports",
+    "settings": "Paramètres"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord de Performance Académique",
+    "subtitle": "Aperçu provincial des métriques de performance des élèves",
+    "keyMetrics": {
+      "title": "Indicateurs Clés de Performance",
+      "overallAverage": "Moyenne Générale",
+      "passRate": "Taux de Réussite",
+      "schoolsAnalyzed": "Écoles Analysées",
+      "improvementRate": "Amélioration"
+    },
+    "performanceTrends": {
+      "title": "Tendances de Performance",
+      "averageScore": "Score Moyen",
+      "passRate": "Taux de Réussite"
+    },
+    "schoolRankings": {
+      "title": "Classement des Écoles",
+      "rank": "Rang",
+      "school": "École",
+      "score": "Score",
+      "empty": "Aucun classement d'école disponible"
+    },
+    "subjectPerformance": {
+      "title": "Analyse de Performance par Matière",
+      "subject": "Matière",
+      "average": "Moyenne",
+      "passRate": "Taux de Réussite",
+      "yoyChange": "Évolution Annuelle",
+      "performance": "Performance",
+      "empty": "Aucune donnée de performance par matière disponible"
+    }
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Adresse Email",
+    "username": "Nom d'Utilisateur",
+    "password": "Mot de Passe",
+    "confirmPassword": "Confirmer le Mot de Passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialisez Votre Mot de Passe",
+    "resetPasswordDescription": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe via Gmail.",
+    "sendResetLink": "Envoyer le Lien de Réinitialisation",
+    "createAccount": "Créer un Compte",
+    "signIn": "Se Connecter"
+  },
+  "import": {
+    "title": "Importer des Données d'Élèves",
+    "subtitle": "Téléchargez des fichiers Excel ou XML contenant des données de performance des élèves pour analyse",
+    "uploadTitle": "Télécharger un Fichier de Données",
+    "uploadDescription": "Téléchargez des fichiers Excel (.xlsx, .xls) ou XML avec des données de performance des élèves pour l'année académique et le trimestre sélectionnés.",
+    "dragDrop": "Glissez & Déposez les Fichiers Ici",
+    "or": "ou",
+    "browse": "Parcourir les Fichiers",
+    "supported": "Formats pris en charge : Excel (.xlsx, .xls) et fichiers XML",
+    "fileSize": "Taille du fichier :",
+    "recentUploads": "Téléchargements Récents",
+    "noUploads": "Aucun téléchargement récent de fichier"
+  },
+  "settings": {
+    "title": "Paramètres de l'Application",
+    "subtitle": "Personnalisez votre expérience et vos préférences",
+    "appearance": {
+      "title": "Apparence",
+      "theme": "Thème",
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    },
+    "language": {
+      "title": "Langue",
+      "english": "English",
+      "french": "Français",
+      "arabic": "العربية"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "actions": "Actions",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "export": "Exporter",
+    "filter": "Filtrer",
+    "search": "Rechercher",
+    "view": "Voir",
+    "download": "Télécharger",
+    "noData": "Aucune donnée disponible"
+  }
+}
