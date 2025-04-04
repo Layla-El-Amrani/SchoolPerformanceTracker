@@ -46,18 +46,21 @@ export async function processExcelFile(
     
     // Create a mapping between expected headers and possible custom headers
     const headerMappings = {
-      "School": ["School", "matiere", "matiereAr"],
-      "Subject": ["Subject", "matiereAr", "matiere", "BAPG"],
-      "Average Score": ["Average Score", "moyenneSession", "moyenneExam", "prExamen", "moyenneCC", "moyenneNoteCC", "matiereAr"],
-      "Pass Rate": ["Pass Rate", "Note", "Notes", "moyenneNoteCC"]
+      "School": ["School", "matiere", "matiereAr", "NOM_ETABA", "Secteur Scolaire م م", "la_com"],
+      "Subject": ["Subject", "matiereAr", "matiere", "BAPG", "MatiereAr"],
+      "Average Score": ["Average Score", "moyenneSession", "moyenneExam", "prExamen", "moyenneCC", "moyenneNoteCC", "MoyenneSession", "MoyenneExam", "MoynneCC", "MoyenneNoteCC_Note"],
+      "Pass Rate": ["Pass Rate", "Note", "Notes", "moyenneNoteCC", "NoteExamen_Note", "MoyenneNoteCC_Note", "MoyenneSession"]
     };
     
     // Helper function to find a header column index based on multiple possible header names
     const findHeaderIndex = (possibleNames: string[]): number => {
       for (const name of possibleNames) {
-        const index = headers.findIndex(h => 
-          h?.toString().toLowerCase() === name.toLowerCase()
-        );
+        const index = headers.findIndex(h => {
+          if (!h) return false;
+          const headerStr = h.toString().toLowerCase();
+          const searchStr = name.toLowerCase();
+          return headerStr === searchStr || headerStr.includes(searchStr);
+        });
         if (index !== -1) return index;
       }
       return -1;
@@ -424,12 +427,17 @@ function parsePercentage(value: string | undefined): number | null {
   if (!value) return null;
   
   // Remove the percentage sign if present
-  const numStr = value.replace('%', '').trim();
+  const numStr = value.replace(/%|,/g, '.').trim();
   const num = parseFloat(numStr);
   
   if (isNaN(num)) return null;
   
-  return num;
+  // When the value is exceptionally small, it might be that it's already given as a decimal (0.85 instead of 85)
+  if (num < 1) {
+    return Math.round(num * 100);
+  }
+  
+  return Math.round(num);
 }
 
 // Calculate school performance summaries from student performance data
