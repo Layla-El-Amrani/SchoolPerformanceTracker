@@ -113,6 +113,16 @@ export class MemStorage implements IStorage {
   }
   
   private initializeData() {
+    // Create admin user
+    this.createUser({
+      username: "admin",
+      email: "admin@example.com",
+      password: "$2b$10$6Q5/3/JPHqvluT9BR2JtF.TkiAHNKcDWUYKK9A0T3NHVMNx2iONGW", // password123
+      role: "admin",
+      resetToken: null,
+      resetTokenExpiry: null
+    });
+    
     // Add common subjects
     const subjects = [
       { name: "Mathematics", code: "MATH" },
