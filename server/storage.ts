@@ -115,11 +115,11 @@ export class MemStorage implements IStorage {
   }
   
   private initializeData() {
-    // Create admin user
+    // Create admin user with proper bcrypt format password
     this.createUser({
       username: "admin",
       email: "admin@example.com",
-      password: "3d44b5fffb19deb5b0216e395610c6bbb6eefab5b1f1aa5d5e518ad8fac64290d34da56969cfd5652b11220c4f7fd13661940b6210edc2d3d7e97fa2d4c0ecc.1111111111111111", // password123
+      password: "password123", // Will be hashed in createUser
       role: "admin",
       resetToken: null,
       resetTokenExpiry: null
@@ -199,9 +199,20 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
+    
+    // Hash the password if it's not already hashed
+    let password = insertUser.password;
+    if (!password.includes('.')) {
+      // Import hashPassword function
+      const { hashPassword } = await import('./auth');
+      password = await hashPassword(password);
+    }
+    
     const user: User = { 
-      ...insertUser, 
+      ...insertUser,
+      password, // Use the potentially hashed password
       id, 
+      role: insertUser.role || 'user', // Default to 'user' if no role provided
       resetToken: null,
       resetTokenExpiry: null,
       createdAt: new Date()
