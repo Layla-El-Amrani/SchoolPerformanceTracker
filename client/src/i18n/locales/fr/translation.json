@@ -91,7 +91,33 @@
     "supported": "Formats pris en charge : Excel (.xlsx, .xls) et fichiers XML",
     "fileSize": "Taille du fichier :",
     "recentUploads": "Téléchargements Récents",
-    "noUploads": "Aucun téléchargement récent de fichier"
+    "noUploads": "Aucun téléchargement récent de fichier",
+    "uploadSuccess": "Fichier téléchargé avec succès",
+    "dataProcessed": "Vos données ont été traitées et sont maintenant disponibles pour analyse.",
+    "uploadFailed": "Échec du téléchargement",
+    "invalidFormat": "Format de fichier invalide",
+    "supportedDescription": "Veuillez télécharger un fichier Excel (.xlsx, .xls) ou XML."
+  },
+  "export": {
+    "title": "Exporter des Rapports",
+    "subtitle": "Générez et téléchargez des rapports d'analyse de performance",
+    "configureReport": "Configurer le Rapport",
+    "configureDescription": "Personnalisez les options de rapport et le format de fichier",
+    "reportType": "Type de Rapport",
+    "selectReportType": "Sélectionner le type de rapport",
+    "fileFormat": "Format de Fichier",
+    "selectFormat": "Sélectionner le format",
+    "includeCharts": "Inclure les graphiques",
+    "generateReport": "Générer le Rapport",
+    "exportStarted": "Génération du rapport commencée. Le téléchargement démarrera automatiquement une fois terminé.",
+    "recentReports": "Rapports Récents",
+    "recentDescription": "Accédez à vos rapports générés récemment",
+    "noReports": "Aucun rapport généré récemment",
+    "reportTypes": {
+      "performance": "Rapport de Performance",
+      "comparison": "Rapport de Comparaison",
+      "distribution": "Rapport de Distribution"
+    }
   },
   "settings": {
     "title": "Paramètres de l'Application",
@@ -108,6 +134,15 @@
       "english": "English",
       "french": "Français",
       "arabic": "العربية"
+    },
+    "password": {
+      "title": "Changer le Mot de Passe",
+      "current": "Mot de Passe Actuel",
+      "new": "Nouveau Mot de Passe",
+      "confirm": "Confirmer le Nouveau Mot de Passe",
+      "changeButton": "Changer le Mot de Passe",
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères"
     }
   },
   "common": {

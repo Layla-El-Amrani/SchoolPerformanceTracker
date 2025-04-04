@@ -91,7 +91,33 @@
     "supported": "التنسيقات المدعومة: Excel (.xlsx, .xls) وملفات XML",
     "fileSize": "حجم الملف:",
     "recentUploads": "التحميلات الأخيرة",
-    "noUploads": "لا توجد تحميلات ملفات حديثة"
+    "noUploads": "لا توجد تحميلات ملفات حديثة",
+    "uploadSuccess": "تم تحميل الملف بنجاح",
+    "dataProcessed": "تمت معالجة بياناتك وهي الآن متاحة للتحليل.",
+    "uploadFailed": "فشل التحميل",
+    "invalidFormat": "تنسيق ملف غير صالح",
+    "supportedDescription": "يرجى تحميل ملف Excel (.xlsx, .xls) أو XML."
+  },
+  "export": {
+    "title": "تصدير التقارير",
+    "subtitle": "إنشاء وتنزيل تقارير تحليل الأداء",
+    "configureReport": "تكوين التقرير",
+    "configureDescription": "تخصيص خيارات التقرير وتنسيق الملف",
+    "reportType": "نوع التقرير",
+    "selectReportType": "اختر نوع التقرير",
+    "fileFormat": "تنسيق الملف",
+    "selectFormat": "اختر التنسيق",
+    "includeCharts": "تضمين الرسوم البيانية",
+    "generateReport": "إنشاء التقرير",
+    "exportStarted": "بدأ إنشاء التقرير. سيبدأ التنزيل تلقائيًا عند الانتهاء.",
+    "recentReports": "التقارير الأخيرة",
+    "recentDescription": "الوصول إلى التقارير التي تم إنشاؤها مؤخرًا",
+    "noReports": "لا توجد تقارير تم إنشاؤها مؤخرًا",
+    "reportTypes": {
+      "performance": "تقرير الأداء",
+      "comparison": "تقرير المقارنة",
+      "distribution": "تقرير التوزيع"
+    }
   },
   "settings": {
     "title": "إعدادات التطبيق",
@@ -108,6 +134,15 @@
       "english": "English",
       "french": "Français",
       "arabic": "العربية"
+    },
+    "password": {
+      "title": "تغيير كلمة المرور",
+      "current": "كلمة المرور الحالية",
+      "new": "كلمة المرور الجديدة",
+      "confirm": "تأكيد كلمة المرور الجديدة",
+      "changeButton": "تغيير كلمة المرور",
+      "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+      "passwordTooShort": "يجب أن تحتوي كلمة المرور على الأقل 8 أحرف"
     }
   },
   "common": {

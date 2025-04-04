@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { UploadCloud } from "lucide-react";
 import { formatBytes } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface FileUploaderProps {
   academicYearId: number;
@@ -14,6 +15,7 @@ interface FileUploaderProps {
 
 export function FileUploader({ academicYearId, termId }: FileUploaderProps) {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -61,15 +63,15 @@ export function FileUploader({ academicYearId, termId }: FileUploaderProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/file-uploads"] });
       toast({
-        title: "File uploaded successfully",
-        description: "Your data has been processed and is now available for analysis.",
+        title: t('import.uploadSuccess'),
+        description: t('import.dataProcessed'),
       });
       setCurrentFile(null);
       setUploadProgress(0);
     },
     onError: (error: Error) => {
       toast({
-        title: "Upload failed",
+        title: t('import.uploadFailed'),
         description: error.message,
         variant: "destructive",
       });
@@ -112,8 +114,8 @@ export function FileUploader({ academicYearId, termId }: FileUploaderProps) {
     
     if (!fileExtension || !['xlsx', 'xls', 'xml'].includes(fileExtension)) {
       toast({
-        title: "Invalid file format",
-        description: "Please upload an Excel (.xlsx, .xls) or XML file.",
+        title: t('import.invalidFormat'),
+        description: t('import.supportedDescription'),
         variant: "destructive",
       });
       return;
@@ -140,10 +142,10 @@ export function FileUploader({ academicYearId, termId }: FileUploaderProps) {
         onClick={openFileDialog}
       >
         <UploadCloud className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-        <h4 className="text-lg font-medium text-foreground mb-2">Drag & Drop Files Here</h4>
-        <p className="text-muted-foreground mb-4">or</p>
+        <h4 className="text-lg font-medium text-foreground mb-2">{t('import.dragDrop')}</h4>
+        <p className="text-muted-foreground mb-4">{t('import.or')}</p>
         <Button className="bg-primary">
-          Browse Files
+          {t('import.browse')}
         </Button>
         <input 
           ref={fileInputRef}
@@ -153,7 +155,7 @@ export function FileUploader({ academicYearId, termId }: FileUploaderProps) {
           onChange={handleChange}
         />
         <p className="text-sm text-muted-foreground mt-4">
-          Supported formats: Excel (.xlsx, .xls) and XML files
+          {t('import.supported')}
         </p>
       </div>
       
@@ -170,7 +172,7 @@ export function FileUploader({ academicYearId, termId }: FileUploaderProps) {
           <Progress value={uploadProgress} className="h-2" />
           {currentFile && (
             <p className="text-xs text-muted-foreground mt-1">
-              File size: {formatBytes(currentFile.size)}
+              {t('import.fileSize')} {formatBytes(currentFile.size)}
             </p>
           )}
         </div>

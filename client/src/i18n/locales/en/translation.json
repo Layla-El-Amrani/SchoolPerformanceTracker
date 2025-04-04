@@ -91,7 +91,33 @@
     "supported": "Supported formats: Excel (.xlsx, .xls) and XML files",
     "fileSize": "File size:",
     "recentUploads": "Recent Uploads",
-    "noUploads": "No recent file uploads"
+    "noUploads": "No recent file uploads",
+    "uploadSuccess": "File uploaded successfully",
+    "dataProcessed": "Your data has been processed and is now available for analysis.",
+    "uploadFailed": "Upload failed",
+    "invalidFormat": "Invalid file format",
+    "supportedDescription": "Please upload an Excel (.xlsx, .xls) or XML file."
+  },
+  "export": {
+    "title": "Export Reports",
+    "subtitle": "Generate and download performance analysis reports",
+    "configureReport": "Configure Report",
+    "configureDescription": "Customize report options and file format",
+    "reportType": "Report Type",
+    "selectReportType": "Select report type",
+    "fileFormat": "File Format",
+    "selectFormat": "Select format",
+    "includeCharts": "Include charts",
+    "generateReport": "Generate Report",
+    "exportStarted": "Report generation started. Download will begin automatically when complete.",
+    "recentReports": "Recent Reports",
+    "recentDescription": "Access your recently generated reports",
+    "noReports": "No recently generated reports",
+    "reportTypes": {
+      "performance": "Performance Report",
+      "comparison": "Comparison Report",
+      "distribution": "Distribution Report"
+    }
   },
   "settings": {
     "title": "Application Settings",
@@ -108,6 +134,15 @@
       "english": "English",
       "french": "Français",
       "arabic": "العربية"
+    },
+    "password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "changeButton": "Change Password",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters"
     }
   },
   "common": {
