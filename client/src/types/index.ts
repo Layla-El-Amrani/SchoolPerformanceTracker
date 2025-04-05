@@ -88,6 +88,7 @@ export interface StudentPerformance {
   averageScore: number;
   passRate: number;
   attendanceRate?: number;
+  improvementRate?: number;
   schoolName?: string; // Joined from School
   subjectName?: string; // Joined from Subject
 }

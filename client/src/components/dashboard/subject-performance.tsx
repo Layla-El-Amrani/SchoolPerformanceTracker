@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { StudentPerformance, SubjectPerformance } from "@/types";
 import { Download, Filter } from "lucide-react";
 import { getColorByScore, getTextColorByScore, getColorForChange } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface SubjectPerformanceTableProps {
   performances?: StudentPerformance[];
 }
 
 export function SubjectPerformanceTable({ performances = [] }: SubjectPerformanceTableProps) {
+  const { t } = useTranslation();
   // Process the data to get subject metrics
   const subjectMetrics = useMemo(() => {
     if (!performances || performances.length === 0) {
@@ -36,13 +38,13 @@ export function SubjectPerformanceTable({ performances = [] }: SubjectPerformanc
         subjectPerfs.reduce((sum, perf) => sum + perf.passRate, 0) / subjectPerfs.length
       );
       
-      // Mock yearly change - in a real app, this would come from historical data
-      // Using a spread to create some variation between -5 and +5
-      const yearChange = Math.round((Math.random() * 10 - 5) * 10) / 10;
+      // Use the improvement field if available, otherwise default to 0
+      // In a real app, this would be calculated from historical data
+      const yearChange = subjectPerfs[0].improvementRate || 0;
       
       return {
         id: parseInt(subjectId),
-        name: subjectPerfs[0].subjectName || `Subject ${subjectId}`,
+        name: subjectPerfs[0].subjectName || `Matière ${subjectId}`,
         average,
         passRate,
         yearChange,
@@ -57,15 +59,15 @@ export function SubjectPerformanceTable({ performances = [] }: SubjectPerformanc
   return (
     <Card className="p-4 mb-8">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-semibold text-foreground">Subject Performance Analysis</h3>
+        <h3 className="font-semibold text-foreground">{t('dashboard.subjectPerformance.title')}</h3>
         <div className="flex space-x-2">
           <Button variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
-            Export
+            {t('common.export')}
           </Button>
           <Button variant="outline" size="sm">
             <Filter className="h-4 w-4 mr-2" />
-            Filter
+            {t('common.filter')}
           </Button>
         </div>
       </div>
@@ -75,11 +77,11 @@ export function SubjectPerformanceTable({ performances = [] }: SubjectPerformanc
           <table className="w-full data-table">
             <thead>
               <tr className="text-left border-b border-border">
-                <th className="pb-3 font-semibold text-muted-foreground text-sm">Subject</th>
-                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">Average</th>
-                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">Pass Rate</th>
-                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">YoY Change</th>
-                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">Performance</th>
+                <th className="pb-3 font-semibold text-muted-foreground text-sm">{t('dashboard.subjectPerformance.subject')}</th>
+                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">{t('dashboard.subjectPerformance.average')}</th>
+                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">{t('dashboard.subjectPerformance.passRate')}</th>
+                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">{t('dashboard.subjectPerformance.yoyChange')}</th>
+                <th className="pb-3 font-semibold text-muted-foreground text-sm text-right">{t('dashboard.subjectPerformance.performance')}</th>
               </tr>
             </thead>
             <tbody>
@@ -105,7 +107,7 @@ export function SubjectPerformanceTable({ performances = [] }: SubjectPerformanc
           </table>
         ) : (
           <div className="text-center py-12 text-muted-foreground">
-            No subject performance data available
+            {t('dashboard.subjectPerformance.empty')}
           </div>
         )}
       </div>

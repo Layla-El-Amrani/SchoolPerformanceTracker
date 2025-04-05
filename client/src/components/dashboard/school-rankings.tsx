@@ -4,12 +4,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { SchoolPerformanceSummary, SchoolRanking } from "@/types";
+import { useTranslation } from "react-i18next";
 
 interface SchoolRankingsProps {
   summaries?: SchoolPerformanceSummary[];
 }
 
 export function SchoolRankings({ summaries = [] }: SchoolRankingsProps) {
+  const { t } = useTranslation();
   const [rankingType, setRankingType] = useState<"average" | "success" | "improvement">("average");
   
   // Process data to get school rankings
@@ -44,7 +46,7 @@ export function SchoolRankings({ summaries = [] }: SchoolRankingsProps) {
     // Take the top 5 schools
     return sorted.slice(0, 5).map((summary, index) => ({
       id: summary.schoolId,
-      name: summary.schoolName || `School ${summary.schoolId}`,
+      name: summary.schoolName || `École ${summary.schoolId}`,
       value: summary[sortField] as number || 0,
       ranking: index + 1
     }));
@@ -55,15 +57,15 @@ export function SchoolRankings({ summaries = [] }: SchoolRankingsProps) {
   return (
     <Card className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-foreground">Top Performing Schools</h3>
+        <h3 className="font-semibold text-foreground">{t('dashboard.schoolRankings.title')}</h3>
         <Select value={rankingType} onValueChange={(value) => setRankingType(value as any)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Ranking Type" />
+            <SelectValue placeholder={t('common.filter')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="average">By Average Score</SelectItem>
-            <SelectItem value="success">By Success Rate</SelectItem>
-            <SelectItem value="improvement">By Improvement</SelectItem>
+            <SelectItem value="average">{t('dashboard.schoolRankings.byAverage')}</SelectItem>
+            <SelectItem value="success">{t('dashboard.schoolRankings.bySuccess')}</SelectItem>
+            <SelectItem value="improvement">{t('dashboard.schoolRankings.byImprovement')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -91,7 +93,7 @@ export function SchoolRankings({ summaries = [] }: SchoolRankingsProps) {
           ))
         ) : (
           <div className="text-center py-6 text-muted-foreground">
-            No school ranking data available
+            {t('dashboard.schoolRankings.empty')}
           </div>
         )}
       </div>
@@ -99,7 +101,7 @@ export function SchoolRankings({ summaries = [] }: SchoolRankingsProps) {
       <div className="mt-4 text-center">
         <Link href="/schools">
           <Button variant="link" className="text-primary">
-            View All Schools
+            {t('dashboard.schoolRankings.viewAll')}
           </Button>
         </Link>
       </div>

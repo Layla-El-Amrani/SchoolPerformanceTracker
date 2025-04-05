@@ -37,11 +37,15 @@
       "passRate": "Pass Rate"
     },
     "schoolRankings": {
-      "title": "School Rankings",
+      "title": "Top Performing Schools",
       "rank": "Rank",
       "school": "School",
       "score": "Score",
-      "empty": "No school rankings available"
+      "empty": "No school rankings available",
+      "viewAll": "View All Schools",
+      "byAverage": "By Average Score",
+      "bySuccess": "By Success Rate",
+      "byImprovement": "By Improvement"
     },
     "subjectPerformance": {
       "title": "Subject Performance Analysis",
@@ -66,6 +70,7 @@
     "sendResetLink": "Send Reset Link",
     "createAccount": "Create Account",
     "signIn": "Sign In",
+    "logout": "Logout",
     "heroDescription": "A comprehensive system for provincial school directors to analyze and visualize student results across different institutions.",
     "feature1": {
       "title": "Comprehensive Dashboards",

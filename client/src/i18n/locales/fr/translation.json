@@ -37,11 +37,15 @@
       "passRate": "Taux de Réussite"
     },
     "schoolRankings": {
-      "title": "Classement des Écoles",
+      "title": "Meilleures Écoles Performantes",
       "rank": "Rang",
       "school": "École",
       "score": "Score",
-      "empty": "Aucun classement d'école disponible"
+      "empty": "Aucun classement d'école disponible",
+      "viewAll": "Voir Toutes les Écoles",
+      "byAverage": "Par Moyenne Générale",
+      "bySuccess": "Par Taux de Réussite",
+      "byImprovement": "Par Amélioration"
     },
     "subjectPerformance": {
       "title": "Analyse de Performance par Matière",
@@ -66,6 +70,7 @@
     "sendResetLink": "Envoyer le Lien de Réinitialisation",
     "createAccount": "Créer un Compte",
     "signIn": "Se Connecter",
+    "logout": "Déconnexion",
     "heroDescription": "Un système complet pour les directeurs d'écoles provinciales afin d'analyser et de visualiser les résultats des élèves à travers différentes institutions.",
     "feature1": {
       "title": "Tableaux de Bord Complets",
