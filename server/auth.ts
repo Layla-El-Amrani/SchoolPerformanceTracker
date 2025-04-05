@@ -5,13 +5,16 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User } from "@shared/schema";
+import { User as SchemaUser } from "@shared/schema";
 import { randomUUID } from "crypto";
 import nodemailer from "nodemailer";
 
+// Define a type for user in passport session
+type PassportUser = Omit<SchemaUser, 'password'> & { id: number };
+
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User extends PassportUser {}
   }
 }
 
@@ -77,7 +80,7 @@ export function setupAuth(app: Express) {
             return done(null, false);
           }
           
-          return done(null, user);
+          return done(null, user as SchemaUser & { id: number });
         } catch (error) {
           console.error("Authentication error:", error);
           return done(error);
@@ -86,10 +89,11 @@ export function setupAuth(app: Express) {
     )
   );
 
-  passport.serializeUser((user, done) => done(null, user.id));
+  passport.serializeUser((user: Express.User, done) => done(null, user.id));
   passport.deserializeUser(async (id: number, done) => {
     const user = await storage.getUser(id);
-    done(null, user);
+    if (!user) return done(new Error('User not found'), null);
+    done(null, user as SchemaUser & { id: number });
   });
 
   app.post("/api/register", async (req, res, next) => {
@@ -127,7 +131,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: Error | null, user: SchemaUser & { id: number } | false, info: any) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ message: "Invalid credentials" });
       
@@ -151,8 +155,10 @@ export function setupAuth(app: Express) {
   app.get("/api/user", (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     
+    // Cast req.user to the proper type
+    const user = req.user as SchemaUser & { id: number, password: string };
     // Remove password from response
-    const { password, ...userWithoutPassword } = req.user;
+    const { password, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
   });
   
@@ -218,8 +224,11 @@ export function setupAuth(app: Express) {
       
       const { currentPassword, newPassword } = req.body;
       
+      // Cast to the proper type
+      const user = req.user as SchemaUser & { id: number, password: string };
+      
       // Validate current password
-      const isPasswordValid = await comparePasswords(currentPassword, req.user.password);
+      const isPasswordValid = await comparePasswords(currentPassword, user.password);
       if (!isPasswordValid) {
         return res.status(400).json({ message: "Current password is incorrect" });
       }
@@ -228,7 +237,7 @@ export function setupAuth(app: Express) {
       const hashedPassword = await hashPassword(newPassword);
       
       // Update user's password
-      await storage.updateUserWithPassword(req.user.id, hashedPassword);
+      await storage.updateUserWithPassword(user.id, hashedPassword);
       
       res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {

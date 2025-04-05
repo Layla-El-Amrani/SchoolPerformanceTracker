@@ -63,7 +63,7 @@ export interface IStorage {
   // Session store methods
   getUsers(): User[];
   updateUserWithPassword(id: number, newPassword: string): Promise<User | undefined>;
-  sessionStore: any; // Using any to bypass type error
+  sessionStore: session.Store;
 }
 
 export class MemStorage implements IStorage {
@@ -76,7 +76,7 @@ export class MemStorage implements IStorage {
   private fileUploads: Map<number, FileUpload>;
   private schoolPerformanceSummaries: Map<number, SchoolPerformanceSummary>;
   
-  sessionStore: any; // Fixed to handle type error
+  sessionStore: session.Store;
   
   private userIdCounter: number;
   private schoolIdCounter: number;
