@@ -3,7 +3,11 @@
     "title": "Analyse de Performance Académique",
     "subtitle": "Tableau de Bord des Écoles Provinciales"
   },
+  "user": {
+    "role": "Directeur d'École"
+  },
   "navigation": {
+    "main": "Principal",
     "dashboard": "Tableau de Bord",
     "schools": "Analyse des Écoles",
     "subjects": "Performance par Matière",

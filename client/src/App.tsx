@@ -10,11 +10,15 @@ import { ProtectedRoute } from "./lib/protected-route";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { Sidebar } from "@/components/layout/sidebar";
+import { Header } from "@/components/layout/header";
 
 // Create Settings page component
 function SettingsPage() {
   const { t, i18n } = useTranslation();
   const { changePasswordMutation, user } = useAuth();
+  const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
+  const [selectedTermId, setSelectedTermId] = useState<string>("all");
   
   // Initial theme and language values
   const [theme, setThemeState] = useState(() => localStorage.getItem('theme') || 'system');
@@ -100,94 +104,107 @@ function SettingsPage() {
   };
   
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-2">{t('settings.title')}</h1>
-      <p className="text-muted-foreground mb-6">{t('settings.subtitle')}</p>
+    <div className="flex h-screen bg-background">
+      <Sidebar />
       
-      <div className="grid gap-8">
-        <div className="bg-card border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">{t('settings.appearance.title')}</h2>
-          <div className="grid gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">{t('settings.appearance.theme')}</label>
-              <select 
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                className="w-full p-2 border rounded-md bg-background"
-              >
-                <option value="light">{t('settings.appearance.light')}</option>
-                <option value="dark">{t('settings.appearance.dark')}</option>
-                <option value="system">{t('settings.appearance.system')}</option>
-              </select>
-            </div>
-          </div>
-        </div>
+      <main className="flex-1 overflow-y-auto">
+        <Header 
+          onYearChange={setSelectedYearId}
+          onTermChange={setSelectedTermId}
+          selectedYearId={selectedYearId}
+          selectedTermId={selectedTermId}
+        />
         
-        <div className="bg-card border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">{t('settings.language.title')}</h2>
-          <div className="grid gap-4">
-            <div>
-              <select 
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="w-full p-2 border rounded-md bg-background"
-              >
-                <option value="en">{t('settings.language.english')}</option>
-                <option value="fr">{t('settings.language.french')}</option>
-                <option value="ar">{t('settings.language.arabic')}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-card border rounded-lg p-6 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">{t('settings.password.title')}</h2>
-          <form onSubmit={handlePasswordChange} className="grid gap-4">
-            {passwordError && (
-              <div className="rounded bg-destructive/15 p-3 text-destructive text-sm">
-                {passwordError}
+        <div className="container mx-auto py-8 px-4">
+          <h1 className="text-3xl font-bold mb-2">{t('settings.title')}</h1>
+          <p className="text-muted-foreground mb-6">{t('settings.subtitle')}</p>
+          
+          <div className="grid gap-8">
+            <div className="bg-card border rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-4">{t('settings.appearance.title')}</h2>
+              <div className="grid gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t('settings.appearance.theme')}</label>
+                  <select 
+                    value={theme}
+                    onChange={(e) => setTheme(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                  >
+                    <option value="light">{t('settings.appearance.light')}</option>
+                    <option value="dark">{t('settings.appearance.dark')}</option>
+                    <option value="system">{t('settings.appearance.system')}</option>
+                  </select>
+                </div>
               </div>
-            )}
-            <div>
-              <label className="block text-sm font-medium mb-2">{t('settings.password.current')}</label>
-              <input 
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full p-2 border rounded-md bg-background"
-                required
-              />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">{t('settings.password.new')}</label>
-              <input 
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full p-2 border rounded-md bg-background"
-                required
-              />
+            
+            <div className="bg-card border rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-4">{t('settings.language.title')}</h2>
+              <div className="grid gap-4">
+                <div>
+                  <select 
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                  >
+                    <option value="en">{t('settings.language.english')}</option>
+                    <option value="fr">{t('settings.language.french')}</option>
+                    <option value="ar">{t('settings.language.arabic')}</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">{t('settings.password.confirm')}</label>
-              <input 
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full p-2 border rounded-md bg-background"
-                required
-              />
+            
+            <div className="bg-card border rounded-lg p-6 shadow-sm">
+              <h2 className="text-xl font-semibold mb-4">{t('settings.password.title')}</h2>
+              <form onSubmit={handlePasswordChange} className="grid gap-4">
+                {passwordError && (
+                  <div className="rounded bg-destructive/15 p-3 text-destructive text-sm">
+                    {passwordError}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t('settings.password.current')}</label>
+                  <input 
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t('settings.password.new')}</label>
+                  <input 
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t('settings.password.confirm')}</label>
+                  <input 
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  />
+                </div>
+                <button 
+                  type="submit"
+                  className="bg-primary text-white px-4 py-2 rounded mt-2 hover:bg-primary/90 transition-colors"
+                  disabled={changePasswordMutation.isPending}
+                >
+                  {changePasswordMutation.isPending ? t('common.loading') : t('settings.password.changeButton')}
+                </button>
+              </form>
             </div>
-            <button 
-              type="submit"
-              className="bg-primary text-white px-4 py-2 rounded mt-2 hover:bg-primary/90 transition-colors"
-              disabled={changePasswordMutation.isPending}
-            >
-              {changePasswordMutation.isPending ? t('common.loading') : t('settings.password.changeButton')}
-            </button>
-          </form>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

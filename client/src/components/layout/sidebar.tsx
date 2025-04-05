@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "react-i18next";
 import { 
   ChartBarStacked, 
   BookOpen, 
@@ -26,6 +27,7 @@ interface SidebarProps {
 export function Sidebar({ className }: SidebarProps) {
   const [location] = useLocation();
   const { user, logoutMutation } = useAuth();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   
   const getInitials = (name: string) => {
@@ -42,32 +44,32 @@ export function Sidebar({ className }: SidebarProps) {
   
   const navItems = [
     {
-      title: "Dashboard",
+      title: t('navigation.dashboard'),
       icon: <ChartBarStacked className="h-5 w-5" />,
       href: "/",
     },
     {
-      title: "School Analysis",
+      title: t('navigation.schools'),
       icon: <Building2 className="h-5 w-5" />,
       href: "/schools",
     },
     {
-      title: "Subject Performance",
+      title: t('navigation.subjects'),
       icon: <BookOpen className="h-5 w-5" />,
       href: "/subjects",
     },
     {
-      title: "Import Data",
+      title: t('navigation.import'),
       icon: <FileUp className="h-5 w-5" />,
       href: "/import",
     },
     {
-      title: "Export Reports",
+      title: t('navigation.export'),
       icon: <FileDown className="h-5 w-5" />,
       href: "/export",
     },
     {
-      title: "Settings",
+      title: t('navigation.settings'),
       icon: <Settings className="h-5 w-5" />,
       href: "/settings",
     },
@@ -76,13 +78,13 @@ export function Sidebar({ className }: SidebarProps) {
   const SidebarContent = () => (
     <div className="h-full flex flex-col">
       <div className="p-4 border-b border-border">
-        <h1 className="text-xl font-bold text-primary">Academic Analysis</h1>
-        <p className="text-sm text-muted-foreground">Provincial Dashboard</p>
+        <h1 className="text-xl font-bold text-primary">{t('app.title')}</h1>
+        <p className="text-sm text-muted-foreground">{t('app.subtitle')}</p>
       </div>
       
       <div className="mt-4 flex-1 overflow-auto">
         <div className="px-4 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Main
+          {t('navigation.main')}
         </div>
         <nav className="space-y-1">
           {navItems.map((item) => (
@@ -119,7 +121,7 @@ export function Sidebar({ className }: SidebarProps) {
           </Avatar>
           <div className="ml-3 overflow-hidden">
             <p className="text-sm font-medium text-foreground truncate">{user?.username}</p>
-            <p className="text-xs text-muted-foreground truncate">School Director</p>
+            <p className="text-xs text-muted-foreground truncate">{t('user.role')}</p>
           </div>
           <Button 
             variant="ghost" 

@@ -3,7 +3,11 @@
     "title": "Academic Performance Analysis",
     "subtitle": "Provincial Schools Dashboard"
   },
+  "user": {
+    "role": "School Director"
+  },
   "navigation": {
+    "main": "Main",
     "dashboard": "Dashboard",
     "schools": "School Analysis",
     "subjects": "Subject Performance",
