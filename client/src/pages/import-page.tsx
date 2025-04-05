@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { Card } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { RecentFiles } from "@/components/import/recent-files";
 import { Loader2 } from "lucide-react";
 
 export default function ImportPage() {
+  const { t } = useTranslation();
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
   const [selectedTermId, setSelectedTermId] = useState<string>("all");
   
@@ -52,8 +54,8 @@ export default function ImportPage() {
         
         <section className="p-6">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-foreground">Import Student Data</h1>
-            <p className="text-muted-foreground">Upload Excel or XML files containing student performance data for analysis</p>
+            <h1 className="text-2xl font-bold text-foreground">{t('import.title')}</h1>
+            <p className="text-muted-foreground">{t('import.subtitle')}</p>
           </div>
           
           {isLoading ? (
@@ -62,10 +64,15 @@ export default function ImportPage() {
             </div>
           ) : (
             <Card className="p-6">
-              <h3 className="text-xl font-semibold text-foreground mb-4">Upload Data File</h3>
-              <p className="text-muted-foreground mb-6">
-                Upload Excel files (.xlsx, .xls) or XML files with student performance data for the selected academic year and term.
+              <h3 className="text-xl font-semibold text-foreground mb-4">{t('import.uploadTitle')}</h3>
+              <p className="text-muted-foreground mb-2">
+                {t('import.uploadDescription')}
               </p>
+              <div className="bg-yellow-100 dark:bg-yellow-900/30 p-3 rounded-md border border-yellow-300 dark:border-yellow-800 mb-6">
+                <p className="text-yellow-800 dark:text-yellow-400 text-sm font-medium">
+                  {t('import.yearSelectionWarning')}
+                </p>
+              </div>
               
               <FileUploader 
                 academicYearId={selectedYearId}

@@ -89,6 +89,7 @@
     "subtitle": "Téléchargez des fichiers Excel ou XML contenant des données de performance des élèves pour analyse",
     "uploadTitle": "Télécharger un Fichier de Données",
     "uploadDescription": "Téléchargez des fichiers Excel (.xlsx, .xls) ou XML avec des données de performance des élèves pour l'année académique et le trimestre sélectionnés.",
+    "yearSelectionWarning": "Important : Les données seront importées pour l'année académique sélectionnée. Veuillez vérifier que l'année correcte est sélectionnée ci-dessus avant de télécharger.",
     "dragDrop": "Glissez & Déposez les Fichiers Ici",
     "or": "ou",
     "browse": "Parcourir les Fichiers",

@@ -46,8 +46,8 @@ export async function processExcelFile(
     
     // Create a mapping between expected headers and possible custom headers
     const headerMappings = {
-      "School": ["School", "matiere", "matiereAr", "NOM_ETABA", "Secteur Scolaire م م", "la_com"],
-      "Subject": ["Subject", "matiereAr", "matiere", "BAPG", "MatiereAr"],
+      "School": ["School", "NOM_ETABA", "Secteur Scolaire م م", "la_com", "School Name", "Établissement", "Etab", "EtablissementNom", "المدرسة", "المؤسسة"],
+      "Subject": ["Subject", "matiere", "matiereAr", "BAPG", "MatiereAr", "Matière", "Sujet", "Subject Name", "المادة", "المواد"],
       "Average Score": ["Average Score", "moyenneSession", "moyenneExam", "prExamen", "moyenneCC", "moyenneNoteCC", "MoyenneSession", "MoyenneExam", "MoynneCC", "MoyenneNoteCC_Note"],
       "Pass Rate": ["Pass Rate", "Note", "Notes", "moyenneNoteCC", "NoteExamen_Note", "MoyenneNoteCC_Note", "MoyenneSession"]
     };
@@ -272,18 +272,22 @@ export async function processXmlFile(
     
     // Extract performance data from XML structure
     // Handle different possible root element names
-    let performanceRecords = [];
-    if (result.performances?.performance) {
-      performanceRecords = result.performances.performance;
-    } else if (result.data?.record) {
-      performanceRecords = result.data.record;
+    let performanceRecords: any[] = [];
+    
+    // Cast the result to any to avoid TypeScript errors with dynamic properties
+    const resultAny = result as any;
+    
+    if (resultAny.performances?.performance) {
+      performanceRecords = resultAny.performances.performance;
+    } else if (resultAny.data?.record) {
+      performanceRecords = resultAny.data.record;
     } else {
       // Try to find any element that might contain the data
-      for (const key in result) {
-        if (result[key] && typeof result[key] === 'object') {
-          for (const subKey in result[key]) {
-            if (Array.isArray(result[key][subKey])) {
-              performanceRecords = result[key][subKey];
+      for (const key in resultAny) {
+        if (resultAny[key] && typeof resultAny[key] === 'object') {
+          for (const subKey in resultAny[key]) {
+            if (Array.isArray(resultAny[key][subKey])) {
+              performanceRecords = resultAny[key][subKey];
               break;
             }
           }
@@ -344,8 +348,8 @@ async function processXmlRecord(
 ) {
   try {
     // Try multiple possible field names for school and subject
-    const schoolFields = ['school', 'schoolName', 'matiere', 'matiereAr'];
-    const subjectFields = ['subject', 'subjectName', 'matiere', 'matiereAr', 'BAPG'];
+    const schoolFields = ['school', 'schoolName', 'NOM_ETABA', 'etablissement', 'المدرسة', 'المؤسسة'];
+    const subjectFields = ['subject', 'subjectName', 'matiere', 'matiereAr', 'BAPG', 'المادة'];
     const scoreFields = ['averageScore', 'score', 'moyenneSession', 'moyenneExam', 'prExamen', 'moyenneCC', 'moyenneNoteCC'];
     const rateFields = ['passRate', 'rate', 'Note', 'Notes', 'moyenneNoteCC'];
     

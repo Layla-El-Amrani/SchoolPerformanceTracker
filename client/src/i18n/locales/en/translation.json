@@ -89,6 +89,7 @@
     "subtitle": "Upload Excel or XML files containing student performance data for analysis",
     "uploadTitle": "Upload Data File",
     "uploadDescription": "Upload Excel files (.xlsx, .xls) or XML files with student performance data for the selected academic year and term.",
+    "yearSelectionWarning": "Important: Data will be imported for the selected academic year. Please verify the correct year is selected above before uploading.",
     "dragDrop": "Drag & Drop Files Here",
     "or": "or",
     "browse": "Browse Files",
