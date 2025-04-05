@@ -3,6 +3,65 @@
     "title": "Analyse de Performance Académique",
     "subtitle": "Tableau de Bord des Écoles Provinciales"
   },
+  "analysis": {
+    "detailedTitle": "Analyse Détaillée",
+    "detailedSubtitle": "Explorez les données de performance en profondeur",
+    "tabs": {
+      "schools": "Analyse des Écoles",
+      "subjects": "Analyse des Matières",
+      "insights": "Tendances et Recommandations"
+    },
+    "selectSchool": "Sélectionner une école",
+    "selectSchoolPrompt": "Veuillez sélectionner une école pour voir son analyse détaillée",
+    "noDataForSchool": "Aucune donnée disponible pour cette école",
+    "selectSubject": "Sélectionner une matière",
+    "selectSubjectPrompt": "Veuillez sélectionner une matière pour voir son analyse détaillée",
+    "noDataForSubject": "Aucune donnée disponible pour cette matière",
+    "rankingInfo": "Classée {{ranking}} sur {{total}} écoles",
+    "overallAverage": "Moyenne Générale",
+    "successRate": "Taux de Réussite",
+    "improvement": "Amélioration",
+    "subjectPerformance": "Performance par Matière",
+    "averageScore": "Score Moyen",
+    "passRate": "Taux de Réussite",
+    "attendance": "Taux de Présence",
+    "subjectsTable": "Tableau des Performances par Matière",
+    "subject": "Matière",
+    "schoolsPerformance": "Performance des Écoles",
+    "passRateComparison": "Comparaison des Taux de Réussite",
+    "schoolsTable": "Tableau des Écoles",
+    "school": "École",
+    "subjectCode": "Code Matière",
+    "improvementRate": "Taux d'Amélioration",
+    "recommendations": {
+      "title": "Recommandations",
+      "subtitle": "Basées sur l'analyse des données",
+      "none": "Pas assez de données pour générer des recommandations",
+      "weakSubjects": "Matières nécessitant attention",
+      "weakSubjectsDesc": "Les matières {{subjects}} montrent des performances plus faibles avec un score moyen de {{score}}. Un soutien pédagogique supplémentaire pourrait être bénéfique.",
+      "topSchools": "Écoles performantes",
+      "topSchoolsDesc": "Les écoles {{schools}} montrent d'excellentes performances avec une moyenne de {{score}}. Analysez leurs méthodes pour les partager.",
+      "attendanceCorrelation": "Corrélation présence-réussite",
+      "attendanceCorrelationDesc": "Les écoles avec un taux de présence élevé ont un taux de réussite de {{highScore}} contre {{lowScore}} pour celles avec une présence plus faible."
+    },
+    "correlations": {
+      "title": "Corrélations et Tendances",
+      "subtitle": "Relations entre différentes métriques de performance",
+      "attendanceVsSuccess": "Relation entre Présence et Réussite"
+    },
+    "distribution": {
+      "title": "Distribution des Performances",
+      "subtitle": "Répartition des performances entre écoles et matières",
+      "subjectPerformance": "Performance par Matière",
+      "topVsBottomSchools": "Meilleures vs Moins Bonnes Écoles",
+      "topSchools": "Meilleures Écoles",
+      "bottomSchools": "Écoles à Améliorer"
+    },
+    "improving": {
+      "title": "Écoles en Progression",
+      "subtitle": "Les écoles qui montrent la plus forte amélioration"
+    }
+  },
   "user": {
     "role": "Directeur d'École"
   },

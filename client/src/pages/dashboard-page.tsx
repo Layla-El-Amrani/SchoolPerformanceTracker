@@ -6,6 +6,7 @@ import { KeyMetrics } from "@/components/dashboard/key-metrics";
 import { PerformanceTrends } from "@/components/dashboard/performance-trends";
 import { SchoolRankings } from "@/components/dashboard/school-rankings";
 import { SubjectPerformanceTable } from "@/components/dashboard/subject-performance";
+import { DetailedAnalysis } from "@/components/dashboard/detailed-analysis";
 import { SchoolPerformanceSummary, StudentPerformance } from "@/types";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -28,7 +29,7 @@ export default function DashboardPage() {
   const {
     data: subjects,
     isLoading: subjectsListLoading
-  } = useQuery({
+  } = useQuery<any[]>({
     queryKey: ["/api/subjects"],
   });
   
@@ -108,6 +109,16 @@ export default function DashboardPage() {
               <SubjectPerformanceTable 
                 performances={subjectPerformances} 
               />
+              
+              {/* Detailed Analysis Section */}
+              <div className="mt-8">
+                <DetailedAnalysis 
+                  performances={subjectPerformances}
+                  summaries={schoolSummaries}
+                  academicYearId={selectedYearId}
+                  termId={selectedTermId === "all" ? undefined : parseInt(selectedTermId)}
+                />
+              </div>
             </>
           )}
         </section>
