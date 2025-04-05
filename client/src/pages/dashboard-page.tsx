@@ -8,8 +8,10 @@ import { SchoolRankings } from "@/components/dashboard/school-rankings";
 import { SubjectPerformanceTable } from "@/components/dashboard/subject-performance";
 import { SchoolPerformanceSummary, StudentPerformance } from "@/types";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
   const [selectedTermId, setSelectedTermId] = useState<string>("all");
   
@@ -22,14 +24,41 @@ export default function DashboardPage() {
     enabled: !!selectedYearId,
   });
   
-  // Fetch subject performances
+  // Fetch all subjects first
   const {
-    data: subjectPerformances,
-    isLoading: subjectsLoading
-  } = useQuery<StudentPerformance[]>({
-    queryKey: ["/api/student-performances", { academicYearId: selectedYearId, termId: selectedTermId === "all" ? undefined : selectedTermId }],
-    enabled: !!selectedYearId,
+    data: subjects,
+    isLoading: subjectsListLoading
+  } = useQuery({
+    queryKey: ["/api/subjects"],
   });
+  
+  // Fetch performances for each subject and combine them
+  const subjectQueries = useQuery<StudentPerformance[]>({
+    queryKey: ["/api/all-performances", { academicYearId: selectedYearId, termId: selectedTermId === "all" ? undefined : selectedTermId }],
+    queryFn: async () => {
+      if (!subjects || !selectedYearId) return [];
+      
+      // Fetch performances for each subject
+      const allPerformances: StudentPerformance[] = [];
+      
+      for (const subject of subjects) {
+        const response = await fetch(`/api/student-performances?subjectId=${subject.id}&academicYearId=${selectedYearId}${
+          selectedTermId !== "all" ? `&termId=${selectedTermId}` : ""
+        }`);
+        
+        if (response.ok) {
+          const performances = await response.json();
+          allPerformances.push(...performances);
+        }
+      }
+      
+      return allPerformances;
+    },
+    enabled: !!subjects && !!selectedYearId,
+  });
+  
+  const subjectPerformances = subjectQueries.data;
+  const subjectsLoading = subjectsListLoading || subjectQueries.isLoading;
   
   const isLoading = summariesLoading || subjectsLoading || !selectedYearId;
   
@@ -47,8 +76,8 @@ export default function DashboardPage() {
         
         <section className="p-6">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-foreground">Academic Performance Dashboard</h1>
-            <p className="text-muted-foreground">Provincial overview of student performance metrics</p>
+            <h1 className="text-2xl font-bold text-foreground">{t('dashboard.title')}</h1>
+            <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
           </div>
           
           {isLoading ? (

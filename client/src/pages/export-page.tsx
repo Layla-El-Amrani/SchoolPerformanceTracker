@@ -47,10 +47,64 @@ export default function ExportPage() {
     setSelectedTermId(termId);
   };
   
-  const handleExport = () => {
-    // In a real app, this would call an API endpoint to generate the export
-    // For now, we'll just show an alert
-    alert(t('export.exportStarted'));
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async () => {
+    if (!selectedYearId) return;
+    
+    setIsExporting(true);
+    
+    try {
+      // Build the export URL with query parameters
+      const exportUrl = `/api/export?` + new URLSearchParams({
+        reportType,
+        fileFormat,
+        includeCharts: includeCharts.toString(),
+        academicYearId: selectedYearId.toString(),
+        ...(selectedTermId !== "all" && { termId: selectedTermId })
+      }).toString();
+      
+      // Fetch the export
+      const response = await fetch(exportUrl);
+      
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+      
+      // Get the filename from the Content-Disposition header if available
+      let filename = 'report';
+      const contentDisposition = response.headers.get('Content-Disposition');
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+      
+      // Add appropriate extension based on file format
+      if (!filename.includes('.')) {
+        filename += fileFormat === 'excel' ? '.xlsx' : '.pdf';
+      }
+      
+      // Download the file
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      // Alert user about the export
+      alert(t('export.exportStarted'));
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Export failed. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
   };
   
   const reportTypeOptions = [
@@ -145,14 +199,16 @@ export default function ExportPage() {
                 <Button 
                   className="w-full" 
                   onClick={handleExport}
-                  disabled={!selectedYearId || yearsLoading}
+                  disabled={!selectedYearId || yearsLoading || isExporting}
                 >
-                  {yearsLoading ? (
+                  {isExporting || yearsLoading ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
                     <FileDown className="h-4 w-4 mr-2" />
                   )}
-                  {t('export.generateReport')}
+                  {isExporting 
+                    ? t('common.loading') 
+                    : t('export.generateReport')}
                 </Button>
               </CardContent>
             </Card>
