@@ -90,6 +90,10 @@
     "uploadTitle": "Upload Data File",
     "uploadDescription": "Upload Excel files (.xlsx, .xls) or XML files with student performance data for the selected academic year and term.",
     "yearSelectionWarning": "Important: Data will be imported for the selected academic year. Please verify the correct year is selected above before uploading.",
+    "academicYear": "Academic Year",
+    "term": "Term",
+    "customYear": "Custom Year",
+    "customYearPlaceholder": "Enter a custom year (e.g. 2024-2025)",
     "dragDrop": "Drag & Drop Files Here",
     "or": "or",
     "browse": "Browse Files",
@@ -162,6 +166,7 @@
     "search": "Search",
     "view": "View",
     "download": "Download",
-    "noData": "No data available"
+    "noData": "No data available",
+    "allTerms": "All Terms"
   }
 }

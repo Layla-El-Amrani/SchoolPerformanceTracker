@@ -53,6 +53,9 @@ function useLoginMutation() {
         title: "Login successful",
         description: `Welcome back, ${user.username}!`,
       });
+      
+      // Force navigation to dashboard after successful login
+      window.location.href = "/";
     },
     onError: (error: Error) => {
       toast({
